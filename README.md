@@ -1,4 +1,4 @@
-echo "# SA-IPTV-LIVE" >> README.md
+# SA-IPTV-LIVE" >> README.md
 git init
 git add README.md
 git commit -m "first commit"
