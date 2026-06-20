@@ -1,4 +1,3 @@
-# SA-IPTV-LIVE
 echo "# SA-IPTV-LIVE" >> README.md
 git init
 git add README.md
