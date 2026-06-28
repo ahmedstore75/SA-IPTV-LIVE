@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SA IPTV LIVE - Global OTT Player</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -100,7 +100,7 @@
 
         /* --- LEFT SIDE: CINEMATIC FULL PLAYER --- */
         .player-section {
-            flex: 2.4; /* প্লেয়ার প্যানেলকে ল্যাপটপের জন্য সর্বোচ্চ বড় করা হয়েছে */
+            flex: 2.4; 
             display: flex;
             flex-direction: column;
             background: #000;
@@ -119,7 +119,8 @@
         video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: contain; 
+            background: #000;
         }
 
         /* স্লিম ইনফো বার */
@@ -154,7 +155,7 @@
 
         /* --- RIGHT SIDE: GLOBAL PLAYLIST PANEL --- */
         .playlist-section {
-            flex: 0.8; /* চ্যানেল লিস্টটি ডানপাশে স্লিম ও স্ট্যান্ডার্ড দেখাবে */
+            flex: 0.8; 
             background: #0f1115;
             display: flex;
             flex-direction: column;
@@ -272,8 +273,8 @@
             border-radius: 2px;
         }
 
-        /* --- RESPONSIVE FOR MOBILE DEVICES --- */
-        @media (max-width: 900px) {
+        /* --- RESPONSIVE FOR MOBILE PORTRAIT (সোজা থাকা অবস্থায়) --- */
+        @media (max-width: 900px) and (orientation: portrait) {
             body {
                 overflow: auto;
             }
@@ -284,13 +285,54 @@
             }
             .player-section {
                 flex: none;
-                height: 40vh;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+            }
+            .video-wrapper {
+                height: 100%;
+                width: 100%;
             }
             .playlist-section {
                 flex: none;
-                height: 55vh;
+                height: 60vh;
                 border-left: none;
                 border-top: 1px solid #1a1e26;
+            }
+        }
+
+        /* --- RESPONSIVE FOR MOBILE LANDSCAPE (রোটেট করার পর ফুল স্ক্রিন ও বর্ডারলেস) --- */
+        @media (max-width: 950px) and (orientation: landscape) {
+            body {
+                overflow: hidden;
+                height: 100vh;
+                width: 100vw;
+            }
+            header, .notice-bar, .stream-info, .playlist-section {
+                display: none !important; 
+            }
+            .main-container {
+                height: 100vh;
+                width: 100vw;
+            }
+            .player-section {
+                flex: 1;
+                height: 100vh;
+                width: 100vw;
+            }
+            .video-wrapper {
+                height: 100vh;
+                width: 100vw;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            video {
+                width: 100vw !important;
+                height: 100vh !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                object-fit: fill !important; /* দুই পাশের কালো দাগ দূর করে স্ক্রিনে ফিট করবে */
             }
         }
     </style>
@@ -307,7 +349,7 @@
     <div class="notice-bar">
         <div class="notice-container">
             <span><i class="fa-solid fa-bullhorn" style="color: #00ff88;"></i> স্বাগতম SA IPTV LIVE প্লেয়ারে! এখানে আপনি পাবেন ২৪/৭ লাইভ টিভি, খেলাুধলা, খবর এবং বিনোদন একদম বিনামূল্যে।</span>
-            <span><i class="fa-solid fa-star" style="color: #ffdd00;"></i> বাফারিং এড়াতে আপনার ইন্টারনেট কানেকশন চেক করুন।</span>
+            <span><i class="fa-solid fa-star" style="color: #ffdd00;"></i> বাফারিং এড়াতে আপনার internet কানেকশন চেক করুন।</span>
             <span><i class="fa-solid fa-heart" style="color: #ff3333;"></i> আমাদের সাথে থাকার জন্য আপনাকে ধন্যবাদ! এনজয় স্ট্রিমিং।</span>
         </div>
     </div>
@@ -332,7 +374,7 @@
                 <input type="text" id="searchChannel" placeholder="Search channel...">
             </div>
             <div class="channel-list" id="channelContainer">
-                </div>
+            </div>
         </div>
 
     </div>
