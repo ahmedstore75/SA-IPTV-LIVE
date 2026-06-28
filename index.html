@@ -36,6 +36,7 @@
             align-items: center;
             border-bottom: 1px solid #1a1e26;
             height: 55px;
+            gap: 15px;
         }
 
         .logo {
@@ -46,10 +47,38 @@
             align-items: center;
             gap: 8px;
             text-shadow: 0 0 12px rgba(70, 52, 255, 0.4);
+            white-space: nowrap;
         }
 
         .logo span {
             color: #fff;
+        }
+
+        /* --- DOWNLOAD BUTTON STYLE --- */
+        .download-btn {
+            background: linear-gradient(135deg, #4634ff, #796cff);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
+            margin-left: auto; /* বাটনটিকে ডানপাশে পুশ করবে */
+        }
+
+        .download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(70, 52, 255, 0.5);
+            background: linear-gradient(135deg, #3525e6, #6759fa);
+        }
+
+        .download-btn:active {
+            transform: translateY(1px);
         }
 
         /* --- RUNNING NOTICE BAR --- */
@@ -151,6 +180,7 @@
             font-size: 11px;
             font-weight: 600;
             border: 1px solid rgba(70, 52, 255, 0.25);
+            white-space: nowrap;
         }
 
         /* --- RIGHT SIDE: GLOBAL PLAYLIST PANEL --- */
@@ -273,7 +303,7 @@
             border-radius: 2px;
         }
 
-        /* --- RESPONSIVE FOR MOBILE PORTRAIT (সোজা থাকা অবস্থায়) --- */
+        /* --- RESPONSIVE FOR MOBILE PORTRAIT --- */
         @media (max-width: 900px) and (orientation: portrait) {
             body {
                 overflow: auto;
@@ -301,7 +331,7 @@
             }
         }
 
-        /* --- RESPONSIVE FOR MOBILE LANDSCAPE (রোটেট করার পর ফুল স্ক্রিন ও বর্ডারলেস) --- */
+        /* --- RESPONSIVE FOR MOBILE LANDSCAPE --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body {
                 overflow: hidden;
@@ -332,7 +362,7 @@
                 height: 100vh !important;
                 max-width: 100% !important;
                 max-height: 100% !important;
-                object-fit: fill !important; /* দুই পাশের কালো দাগ দূর করে স্ক্রিনে ফিট করবে */
+                object-fit: fill !important;
             }
         }
     </style>
@@ -343,6 +373,10 @@
         <div class="logo">
             <i class="fa-solid fa-circle-play" style="color: #4634ff;"></i> SA <span>IPTV LIVE</span>
         </div>
+        <!-- ডাউনলোড বাটনটি এখানে যোগ করা হয়েছে -->
+        <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
+            <i class="fa-solid fa-download"></i> Download
+        </a>
         <div class="status-badge" id="totalChannels">0 Channels</div>
     </header>
 
