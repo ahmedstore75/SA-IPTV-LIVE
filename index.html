@@ -68,7 +68,7 @@
             gap: 6px;
             transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
-            margin-left: auto; /* বাটনটিকে ডানপাশে পুশ করবে */
+            margin-left: auto; 
         }
 
         .download-btn:hover {
@@ -152,7 +152,6 @@
             background: #000;
         }
 
-        /* স্লিম ইনফো বার */
         .stream-info {
             background: #0f1115;
             padding: 10px 20px;
@@ -190,18 +189,27 @@
             display: flex;
             flex-direction: column;
             border-left: 1px solid #1a1e26;
+            position: relative;
         }
 
         .search-box {
             padding: 12px;
             background: #13171e;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             border-bottom: 1px solid #1a1e26;
         }
 
-        .search-box i {
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper i {
             position: absolute;
-            left: 24px;
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: #555;
@@ -223,6 +231,68 @@
         .search-box input:focus {
             border-color: #4634ff;
             box-shadow: 0 0 6px rgba(70, 52, 255, 0.2);
+        }
+
+        /* --- CATEGORY DROPDOWN BUTTON --- */
+        .category-dropdown-btn {
+            width: 100%;
+            padding: 8px 12px;
+            background: #060709;
+            border: 1px solid #222936;
+            border-radius: 6px;
+            color: #cbd5e1;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .category-dropdown-btn:hover {
+            border-color: #4634ff;
+            color: #fff;
+        }
+
+        /* --- DYNAMIC CATEGORY MENU --- */
+        .category-menu {
+            position: absolute;
+            top: 95px; 
+            left: 12px;
+            right: 12px;
+            background: #13171e;
+            border: 1px solid #222936;
+            border-radius: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            padding: 4px;
+        }
+
+        .category-menu.show {
+            display: block;
+        }
+
+        .category-item {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #cbd5e1;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.15s;
+        }
+
+        .category-item:hover {
+            background: rgba(70, 52, 255, 0.15);
+            color: #fff;
+        }
+
+        .category-item.active {
+            background: #4634ff;
+            color: #fff;
+            font-weight: 500;
         }
 
         /* VERTICAL SLIM LIST */
@@ -260,7 +330,7 @@
             border-color: #4634ff;
         }
 
-        /* FLAT SQUARE LOGO - MODIFIED WITH OPACITY FOR SMOOTH LOADING */
+        /* FLAT SQUARE LOGO WITH SMOOTH DELAY LOAD */
         .channel-logo {
             width: 30px;
             height: 30px;
@@ -270,12 +340,12 @@
             padding: 1px;
             border: 1px solid #222936;
             flex-shrink: 0;
-            opacity: 0.4; /* লোড হওয়ার আগে হালকা দেখাবে, ফলে স্ক্রলিং আটকাবে না */
+            opacity: 0.4;
             transition: opacity 0.2s ease;
         }
-
+        
         .channel-logo.loaded {
-            opacity: 1; /* লোড কমপ্লিট হলে পুরোপুরি উজ্জ্বল হবে */
+            opacity: 1;
         }
 
         .channel-name {
@@ -409,11 +479,20 @@
 
         <div class="playlist-section">
             <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchChannel" placeholder="Search channel...">
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchChannel" placeholder="Search channel...">
+                </div>
+                
+                <button class="category-dropdown-btn" id="categoryBtn">
+                    <span id="selectedCategoryText"><i class="fa-solid fa-layer-group"></i> All Categories</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
             </div>
-            <div class="channel-list" id="channelContainer">
-            </div>
+            
+            <div class="category-menu" id="categoryMenu"></div>
+
+            <div class="channel-list" id="channelContainer"></div>
         </div>
 
     </div>
@@ -422,19 +501,30 @@
         const video = document.getElementById("videoPlayer");
         const searchInput = document.getElementById("searchChannel");
         const channelContainer = document.getElementById("channelContainer");
+        const categoryBtn = document.getElementById("categoryBtn");
+        const categoryMenu = document.getElementById("categoryMenu");
+        const selectedCategoryText = document.getElementById("selectedCategoryText");
         const currentChannelName = document.getElementById("currentChannelName");
         const playerStatus = document.getElementById("playerStatus");
         const totalChannelsBadge = document.getElementById("totalChannels");
 
         let hlsPlayer;
         let allChannels = [];
+        let selectedCategory = "All";
         
         const m3uUrl = "https://raw.githubusercontent.com/ahmedstore75/Iptvbdlive/refs/heads/main/mixiptvchannel.m3u";
-        
-        // দ্রুত পারফরম্যান্সের জন্য ইন-বিল্ট লাইটওয়েট SVG ডিফল্ট লোগো ব্যবহার করা হয়েছে
         const defaultLogo = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23222936'><path d='M50 15c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35-15.7-35-35-35zm-8 48V37l18 13-18 13z'/></svg>";
 
-        /* 1. M3U PLAYLIST FETCH & PARSE */
+        categoryBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            categoryMenu.classList.toggle("show");
+        });
+
+        document.addEventListener("click", () => {
+            categoryMenu.classList.remove("show");
+        });
+
+        /* 1. M3U PLAYLIST FETCH & PARSE WITH CATEGORY PRESERVATION */
         async function fetchPlaylist() {
             playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
             try {
@@ -445,18 +535,24 @@
                 allChannels = [];
                 let currentName = "";
                 let currentLogo = "";
+                let currentCategory = "Others";
 
                 for (let i = 0; i < lines.length; i++) {
                     let line = lines[i].trim();
                     
                     if (line.includes("#EXTINF")) {
                         currentName = line.split(",")[1] || "Unknown Channel";
+                        
                         let logoMatch = line.match(/tvg-logo="(.*?)"/);
                         currentLogo = logoMatch ? logoMatch[1] : "";
+
+                        let groupMatch = line.match(/group-title="(.*?)"/);
+                        currentCategory = groupMatch ? groupMatch[1] : "Others";
                     } else if (line.startsWith("http")) {
                         allChannels.push({
                             name: currentName,
                             logo: currentLogo,
+                            category: currentCategory,
                             url: line
                         });
                     }
@@ -466,7 +562,8 @@
                 playerStatus.innerHTML = "Playlist Loaded";
                 
                 if(allChannels.length > 0) {
-                    renderChannels(allChannels);
+                    renderCategories();
+                    filterAndRender();
                     playStream(allChannels[0].url, allChannels[0].name);
                     setTimeout(() => {
                         if(channelContainer.firstChild) channelContainer.firstChild.classList.add('active');
@@ -479,7 +576,53 @@
             }
         }
 
-        /* 2. MODIFIED CHANNELS RENDER (WITH BACKGROUND LAZY LOADER) */
+        /* 2. RENDER CATEGORIES (DROPDOWN MENU) */
+        function renderCategories() {
+            categoryMenu.innerHTML = "";
+            const categories = ["All", ...new Set(allChannels.map(ch => ch.category))];
+            const fragment = document.createDocumentFragment();
+
+            categories.forEach(category => {
+                const div = document.createElement("div");
+                div.className = `category-item ${category === selectedCategory ? 'active' : ''}`;
+                div.textContent = category;
+
+                div.onclick = () => {
+                    selectedCategory = category;
+                    updateCategoryUI(category);
+                    searchInput.value = ""; 
+                    filterAndRender();
+                };
+
+                fragment.appendChild(div);
+            });
+            categoryMenu.appendChild(fragment);
+        }
+
+        function updateCategoryUI(category) {
+            selectedCategoryText.innerHTML = `<i class="fa-solid fa-layer-group"></i> ${category === 'All' ? 'All Categories' : category}`;
+            categoryMenu.classList.remove("show");
+            
+            document.querySelectorAll('.category-item').forEach(el => {
+                if(el.textContent === category) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+        }
+
+        /* 3. FILTER & RENDER LOGIC */
+        function filterAndRender() {
+            const query = searchInput.value.toLowerCase();
+            
+            const filtered = allChannels.filter(ch => {
+                const matchesCategory = selectedCategory === "All" || ch.category === selectedCategory;
+                const matchesSearch = ch.name.toLowerCase().includes(query);
+                return matchesCategory && matchesSearch;
+            });
+
+            renderChannels(filtered);
+        }
+
+        /* 4. CHANNELS RENDER WITH BACKGROUND LAZY LOGO LOADER */
         function renderChannels(channels) {
             channelContainer.innerHTML = "";
             
@@ -494,7 +637,6 @@
                 const div = document.createElement("div");
                 div.className = "channel-item";
 
-                // শুরুতে 'defaultLogo' সেট করা হয়েছে এবং আসল লোগোটি 'data-src' এ রাখা হয়েছে
                 div.innerHTML = `
                     <img class="channel-logo" src="${defaultLogo}" data-src="${channel.logo}">
                     <div class="channel-name">${channel.name}</div>
@@ -511,11 +653,11 @@
 
             channelContainer.appendChild(fragment);
 
-            // চ্যানেল রেন্ডার হওয়ার সাথে সাথে ব্যাকগ্রাউন্ডে লোগো ডাউনলোডের অ্যাসিনক্রোনাস রিকোয়েস্ট পাঠানো হবে
+            // ব্যাকগ্রাউন্ড থ্রেডে লোগো লোড হবে, মেইন ইউজার ইন্টারফেস বিন্দুমাত্র ল্যাগ করবে না
             setTimeout(lazyLoadLogos, 50);
         }
 
-        /* --- NEW MODIFIED BACKGROUND LOGO LOADER --- */
+        /* --- ASYNCHRONOUS BACKGROUND LOGO LOADER --- */
         function lazyLoadLogos() {
             const images = channelContainer.querySelectorAll(".channel-logo");
             
@@ -527,7 +669,6 @@
                     return;
                 }
 
-                // ব্রাউজারের মেইন স্ক্রিনকে ডিস্টার্ব না করে সম্পূর্ণ ব্যাকগ্রাউন্ডে ইমেজ রিকোয়েস্ট করবে
                 const tempImg = new Image();
                 tempImg.src = realSrc;
 
@@ -543,7 +684,7 @@
             });
         }
 
-        /* 3. PLAY STREAM */
+        /* 5. PLAY STREAM */
         function playStream(url, name) {
             currentChannelName.innerHTML = `<i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> ${name}`;
             playerStatus.innerHTML = "<i class='fa-solid fa-circle-notch fa-spin'></i> Connecting...";
@@ -580,11 +721,13 @@
             }
         }
 
-        /* 4. LIVE SEARCH FILTER */
+        /* 6. LIVE SEARCH WITH CATEGORY SYNC */
         searchInput.addEventListener("input", () => {
-            const query = searchInput.value.toLowerCase();
-            const filtered = allChannels.filter(ch => ch.name.toLowerCase().includes(query));
-            renderChannels(filtered);
+            if (searchInput.value.trim() !== "") {
+                selectedCategory = "All";
+                updateCategoryUI("All");
+            }
+            filterAndRender();
         });
 
         fetchPlaylist();
