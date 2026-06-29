@@ -527,7 +527,6 @@
                 const data = await response.text();
                 
                 setTimeout(() => {
-                    // শুধু আসল M3U ফাইলের ডাটা আলাদা করতে এক্সট্রা ফিল্টার
                     const lines = data.split("\n");
                     allChannels = [];
                     let currentName = "";
@@ -538,7 +537,6 @@
                     for (let i = 0; i < lines.length; i++) {
                         let line = lines[i].trim();
                         
-                        // কোড নিশ্চিত করবে যে এটা প্লেলিস্ট ফাইল রিড করছে, অন্য কোনো এইচটিএমএল টেক্সট নয়
                         if (line.startsWith("#EXTM3U")) {
                             isPlaylistStarted = true;
                             continue;
@@ -550,7 +548,14 @@
                             currentName = line.split(",")[1] || "Unknown Channel";
                             
                             let logoMatch = line.match(/tvg-logo="(.*?)"/);
-                            currentLogo = logoMatch ? logoMatch[1] : "";
+                            let baseLogo = logoMatch ? logoMatch[1] : "";
+                            
+                            // 🔒 MIXED CONTENT FIXER: http:// কে https:// তে কনভার্ট করার লজিক
+                            if (baseLogo.startsWith("http://")) {
+                                currentLogo = baseLogo.replace("http://", "https://");
+                            } else {
+                                currentLogo = baseLogo;
+                            }
 
                             let groupMatch = line.match(/group-title="(.*?)"/);
                             currentCategory = groupMatch ? groupMatch[1] : "Others";
