@@ -36,7 +36,7 @@
             align-items: center;
             border-bottom: 1px solid #1a1e26;
             height: 55px;
-            gap: 15px; /* এলিমেন্টগুলোর মাঝে স্পেস রাখার জন্য */
+            gap: 15px;
         }
 
         .logo {
@@ -68,7 +68,7 @@
             gap: 6px;
             transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
-            margin-left: auto; /* বাটনটিকে মাঝখানে পুশ করে ডানপাশে সুন্দর পজিশনে রাখবে */
+            margin-left: auto;
         }
 
         .download-btn:hover {
@@ -444,6 +444,7 @@
         <div class="logo">
             <i class="fa-solid fa-circle-play" style="color: #4634ff;"></i> SA <span>IPTV LIVE</span>
         </div>
+        <!-- ডাউনলোড বাটন সম্পূর্ণ সেফ এলিমেন্ট হিসেবে সেট করা হয়েছে -->
         <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
             <i class="fa-solid fa-download"></i> Download
         </a>
@@ -519,7 +520,7 @@
             categoryMenu.classList.remove("show");
         });
 
-        /* 1. M3U PLAYLIST FETCH & SPEED PARSE (OPTIMIZED) */
+        /* M3U PLAYLIST FETCH & SPEED PARSE (FIXED PARSING CONFLICT) */
         async function fetchPlaylist() {
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
             try {
@@ -532,6 +533,7 @@
                     let currentName = "";
                     let currentLogo = "";
                     let currentCategory = "Others";
+                    let hasInfo = false; // নিশ্চিত করবে যে ইনফো পাওয়ার পরেই কেবল নিচের স্ট্রিম লিংক রিড হবে
 
                     for (let i = 0; i < lines.length; i++) {
                         let line = lines[i].trim();
@@ -544,13 +546,16 @@
 
                             let groupMatch = line.match(/group-title="(.*?)"/);
                             currentCategory = groupMatch ? groupMatch[1] : "Others";
-                        } else if (line.startsWith("http")) {
+                            hasInfo = true; // ফ্ল্যাগ ট্রু করা হলো
+                        } else if (line.startsWith("http") && hasInfo) {
+                            // শুধুমাত্র #EXTINF এর ঠিক নিচের আসল স্ট্রিম লিংকগুলোকে নেবে
                             allChannels.push({
                                 name: currentName,
                                 logo: currentLogo,
                                 category: currentCategory,
                                 url: line
                             });
+                            hasInfo = false; // আবার রিসেট করা হলো পরবর্তী চ্যানেলের জন্য
                         }
                     }
 
@@ -573,7 +578,7 @@
             }
         }
 
-        /* 2. RENDER CATEGORIES IN DROPDOWN MENU */
+        /* RENDER CATEGORIES IN DROPDOWN MENU */
         function renderCategories() {
             if (!categoryMenu) return;
             categoryMenu.innerHTML = "";
@@ -610,7 +615,7 @@
             });
         }
 
-        /* 3. FILTER & RENDER CHANNELS */
+        /* FILTER & RENDER CHANNELS */
         function filterAndRender() {
             const query = searchInput ? searchInput.value.toLowerCase() : "";
             
@@ -623,7 +628,7 @@
             renderChannels(filtered);
         }
 
-        /* 4. RENDER CHANNELS (SUPER FAST DOM METHOD) */
+        /* RENDER CHANNELS */
         function renderChannels(channels) {
             if (!channelContainer) return;
             channelContainer.innerHTML = "";
@@ -658,7 +663,7 @@
             channelContainer.appendChild(fragment);
         }
 
-        /* 5. PLAY STREAM */
+        /* PLAY STREAM */
         function playStream(url, name) {
             if (currentChannelName) currentChannelName.innerHTML = `<i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> ${name}`;
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-circle-notch fa-spin'></i> Connecting...";
@@ -695,7 +700,7 @@
             }
         }
 
-        /* 6. LIVE SEARCH FILTER */
+        /* LIVE SEARCH FILTER */
         if (searchInput) {
             searchInput.addEventListener("input", () => {
                 if (searchInput.value.trim() !== "") {
