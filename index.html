@@ -68,7 +68,7 @@
             gap: 6px;
             transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
-            margin-left: auto; 
+            margin-left: auto;
         }
 
         .download-btn:hover {
@@ -152,6 +152,7 @@
             background: #000;
         }
 
+        /* স্লিম ইনফো বার */
         .stream-info {
             background: #0f1115;
             padding: 10px 20px;
@@ -330,7 +331,7 @@
             border-color: #4634ff;
         }
 
-        /* FLAT SQUARE LOGO WITH SMOOTH ASYNC OPACITY */
+        /* FLAT SQUARE LOGO */
         .channel-logo {
             width: 30px;
             height: 30px;
@@ -340,12 +341,6 @@
             padding: 1px;
             border: 1px solid #222936;
             flex-shrink: 0;
-            opacity: 0.4;
-            transition: opacity 0.2s ease;
-        }
-        
-        .channel-logo.loaded {
-            opacity: 1;
         }
 
         .channel-name {
@@ -449,6 +444,7 @@
         <div class="logo">
             <i class="fa-solid fa-circle-play" style="color: #4634ff;"></i> SA <span>IPTV LIVE</span>
         </div>
+        <!-- ডাউনলোড বাটন সম্পূর্ণ সেফ এলিমেন্ট হিসেবে সেট করা হয়েছে -->
         <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
             <i class="fa-solid fa-download"></i> Download
         </a>
@@ -513,7 +509,7 @@
         let selectedCategory = "All";
         
         const m3uUrl = "https://raw.githubusercontent.com/ahmedstore75/Iptvbdlive/refs/heads/main/mixiptvchannel.m3u";
-        const defaultLogo = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23222936'><path d='M50 15c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35-15.7-35-35-35zm-8 48V37l18 13-18 13z'/></svg>";
+        const defaultLogo = "https://cdn-icons-png.flaticon.com/512/716/716429.png";
 
         categoryBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -524,52 +520,57 @@
             categoryMenu.classList.remove("show");
         });
 
-        /* M3U PLAYLIST FETCH & PARSE WITH FIXED SELECTOR */
+        /* M3U PLAYLIST FETCH & SPEED PARSE (FIXED PARSING CONFLICT) */
         async function fetchPlaylist() {
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
             try {
                 const response = await fetch(m3uUrl);
                 const data = await response.text();
-                const lines = data.split("\n");
-
-                allChannels = [];
-                let currentName = "";
-                let currentLogo = "";
-                let currentCategory = "Others";
-
-                for (let i = 0; i < lines.length; i++) {
-                    let line = lines[i].trim();
-                    
-                    if (line.includes("#EXTINF")) {
-                        currentName = line.split(",")[1] || "Unknown Channel";
-                        
-                        let logoMatch = line.match(/tvg-logo="(.*?)"/);
-                        currentLogo = logoMatch ? logoMatch[1] : "";
-
-                        let groupMatch = line.match(/group-title="(.*?)"/);
-                        currentCategory = groupMatch ? groupMatch[1] : "Others";
-                    } else if (line.startsWith("http")) {
-                        allChannels.push({
-                            name: currentName,
-                            logo: currentLogo,
-                            category: currentCategory,
-                            url: line
-                        });
-                    }
-                }
-
-                // এখানে ডাউনলোড বাটন অ্যাড করার পর এরর হওয়া ফিক্স করা হয়েছে
-                if (totalChannelsBadge) totalChannelsBadge.innerHTML = `<i class="fa-solid fa-list"></i> ${allChannels.length}`;
-                if (playerStatus) playerStatus.innerHTML = "Playlist Loaded";
                 
-                if(allChannels.length > 0) {
-                    renderCategories();
-                    filterAndRender();
-                    playStream(allChannels[0].url, allChannels[0].name);
-                    setTimeout(() => {
-                        if(channelContainer && channelContainer.firstChild) channelContainer.firstChild.classList.add('active');
-                    }, 100);
-                }
+                setTimeout(() => {
+                    const lines = data.split("\n");
+                    allChannels = [];
+                    let currentName = "";
+                    let currentLogo = "";
+                    let currentCategory = "Others";
+                    let hasInfo = false; // নিশ্চিত করবে যে ইনফো পাওয়ার পরেই কেবল নিচের স্ট্রিম লিংক রিড হবে
+
+                    for (let i = 0; i < lines.length; i++) {
+                        let line = lines[i].trim();
+                        
+                        if (line.includes("#EXTINF")) {
+                            currentName = line.split(",")[1] || "Unknown Channel";
+                            
+                            let logoMatch = line.match(/tvg-logo="(.*?)"/);
+                            currentLogo = logoMatch ? logoMatch[1] : "";
+
+                            let groupMatch = line.match(/group-title="(.*?)"/);
+                            currentCategory = groupMatch ? groupMatch[1] : "Others";
+                            hasInfo = true; // ফ্ল্যাগ ট্রু করা হলো
+                        } else if (line.startsWith("http") && hasInfo) {
+                            // শুধুমাত্র #EXTINF এর ঠিক নিচের আসল স্ট্রিম লিংকগুলোকে নেবে
+                            allChannels.push({
+                                name: currentName,
+                                logo: currentLogo,
+                                category: currentCategory,
+                                url: line
+                            });
+                            hasInfo = false; // আবার রিসেট করা হলো পরবর্তী চ্যানেলের জন্য
+                        }
+                    }
+
+                    if (totalChannelsBadge) totalChannelsBadge.innerHTML = `<i class="fa-solid fa-list"></i> ${allChannels.length}`;
+                    if (playerStatus) playerStatus.innerHTML = "Playlist Loaded";
+                    
+                    if(allChannels.length > 0) {
+                        renderCategories();
+                        filterAndRender();
+                        playStream(allChannels[0].url, allChannels[0].name);
+                        setTimeout(() => {
+                            if(channelContainer && channelContainer.firstChild) channelContainer.firstChild.classList.add('active');
+                        }, 50);
+                    }
+                }, 10);
 
             } catch (error) {
                 if (playerStatus) playerStatus.innerHTML = "Failed to load";
@@ -577,11 +578,12 @@
             }
         }
 
-        /* RENDER CATEGORIES */
+        /* RENDER CATEGORIES IN DROPDOWN MENU */
         function renderCategories() {
             if (!categoryMenu) return;
             categoryMenu.innerHTML = "";
             const categories = ["All", ...new Set(allChannels.map(ch => ch.category))];
+
             const fragment = document.createDocumentFragment();
 
             categories.forEach(category => {
@@ -613,7 +615,7 @@
             });
         }
 
-        /* FILTER & RENDER */
+        /* FILTER & RENDER CHANNELS */
         function filterAndRender() {
             const query = searchInput ? searchInput.value.toLowerCase() : "";
             
@@ -626,7 +628,7 @@
             renderChannels(filtered);
         }
 
-        /* ASYNC IMAGE HANDLING - NO LAGGING */
+        /* RENDER CHANNELS */
         function renderChannels(channels) {
             if (!channelContainer) return;
             channelContainer.innerHTML = "";
@@ -641,9 +643,11 @@
             channels.forEach((channel) => {
                 const div = document.createElement("div");
                 div.className = "channel-item";
+                
+                let imgLogo = channel.logo ? channel.logo : defaultLogo;
 
                 div.innerHTML = `
-                    <img class="channel-logo" src="${defaultLogo}" data-src="${channel.logo}">
+                    <img class="channel-logo" src="${imgLogo}" onerror="this.src='${defaultLogo}';">
                     <div class="channel-name">${channel.name}</div>
                 `;
 
@@ -657,38 +661,9 @@
             });
 
             channelContainer.appendChild(fragment);
-            setTimeout(lazyLoadLogos, 50);
         }
 
-        /* BACKGROUND LOGO LOADER */
-        function lazyLoadLogos() {
-            if (!channelContainer) return;
-            const images = channelContainer.querySelectorAll(".channel-logo");
-            
-            images.forEach(img => {
-                const realSrc = img.getAttribute("data-src");
-                
-                if (!realSrc || realSrc.trim() === "") {
-                    img.classList.add("loaded");
-                    return;
-                }
-
-                const tempImg = new Image();
-                tempImg.src = realSrc;
-
-                tempImg.onload = () => {
-                    img.src = realSrc;
-                    img.classList.add("loaded");
-                };
-
-                tempImg.onerror = () => {
-                    img.src = defaultLogo;
-                    img.classList.add("loaded");
-                };
-            });
-        }
-
-        /* PLAY STREAM FUNCTION */
+        /* PLAY STREAM */
         function playStream(url, name) {
             if (currentChannelName) currentChannelName.innerHTML = `<i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> ${name}`;
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-circle-notch fa-spin'></i> Connecting...";
@@ -725,6 +700,7 @@
             }
         }
 
+        /* LIVE SEARCH FILTER */
         if (searchInput) {
             searchInput.addEventListener("input", () => {
                 if (searchInput.value.trim() !== "") {
