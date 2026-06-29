@@ -68,7 +68,7 @@
             gap: 6px;
             transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
-            margin-left: auto; /* বাটনটিকে ডানপাশে পুশ করবে */
+            margin-left: auto; 
         }
 
         .download-btn:hover {
@@ -152,7 +152,6 @@
             background: #000;
         }
 
-        /* স্লিম ইনফো বার */
         .stream-info {
             background: #0f1115;
             padding: 10px 20px;
@@ -331,13 +330,14 @@
             border-color: #4634ff;
         }
 
-        /* FLAT SQUARE LOGO */
+        /* FLAT SQUARE LOGO WITH LOADING PLACEHOLDER */
         .channel-logo {
             width: 30px;
             height: 30px;
             border-radius: 4px;
             object-fit: contain;
-            background: #060709;
+            background: #060709 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" fill="none" stroke="%23222936" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"><animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"/></svg>') center no-repeat;
+            background-size: 16px;
             padding: 1px;
             border: 1px solid #222936;
             flex-shrink: 0;
@@ -619,7 +619,7 @@
             renderChannels(filtered);
         }
 
-        /* 4. RENDER CHANNELS (SUPER FAST) */
+        /* 4. RENDER CHANNELS WITH LAZY LOADING & PLACEHOLDER */
         function renderChannels(channels) {
             channelContainer.innerHTML = "";
             
@@ -636,8 +636,9 @@
                 
                 let imgLogo = channel.logo ? channel.logo : defaultLogo;
 
+                // loading="lazy" যুক্ত করা হয়েছে যাতে স্ক্রল করার আগে ইমেজ লোড হয়ে ব্রাউজার স্লো না করে
                 div.innerHTML = `
-                    <img class="channel-logo" src="${imgLogo}" onerror="this.src='${defaultLogo}';">
+                    <img class="channel-logo" src="${imgLogo}" loading="lazy" onerror="this.onerror=null; this.src='${defaultLogo}';">
                     <div class="channel-name">${channel.name}</div>
                 `;
 
