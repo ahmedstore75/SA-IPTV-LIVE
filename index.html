@@ -330,17 +330,23 @@
             border-color: #4634ff;
         }
 
-        /* FLAT SQUARE LOGO WITH LOADING PLACEHOLDER */
+        /* FLAT SQUARE LOGO - FIXED SIZE WITH DEFAULT SVG BG */
         .channel-logo {
             width: 30px;
             height: 30px;
             border-radius: 4px;
             object-fit: contain;
-            background: #060709 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" fill="none" stroke="%23222936" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"><animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"/></svg>') center no-repeat;
-            background-size: 16px;
+            background: #060709;
             padding: 1px;
             border: 1px solid #222936;
             flex-shrink: 0;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+        }
+        
+        .channel-logo.loaded {
+            opacity: 1;
+            background: #060709;
         }
 
         .channel-name {
@@ -508,7 +514,9 @@
         let selectedCategory = "All";
         
         const m3uUrl = "https://raw.githubusercontent.com/ahmedstore75/Iptvbdlive/refs/heads/main/mixiptvchannel.m3u";
-        const defaultLogo = "https://cdn-icons-png.flaticon.com/512/716/716429.png";
+        
+        // ডিফল্ট লোগো হিসেবে একটি হালকা ও ফাস্ট বেস৬৪ ইমেজ ব্যবহার করা হয়েছে যাতে কোনো নেটওয়ার্ক কল না লাগে
+        const defaultLogo = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23222936'><path d='M50 15c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35-15.7-35-35-35zm-8 48V37l18 13-18 13z'/></svg>";
 
         categoryBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -519,7 +527,7 @@
             categoryMenu.classList.remove("show");
         });
 
-        /* 1. M3U PLAYLIST FETCH & SPEED PARSE */
+        /* 1. M3U PLAYLIST FETCH */
         async function fetchPlaylist() {
             playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
             try {
@@ -573,7 +581,7 @@
             }
         }
 
-        /* 2. RENDER CATEGORIES IN DROPDOWN MENU */
+        /* 2. RENDER CATEGORIES */
         function renderCategories() {
             categoryMenu.innerHTML = "";
             const categories = ["All", ...new Set(allChannels.map(ch => ch.category))];
@@ -619,7 +627,7 @@
             renderChannels(filtered);
         }
 
-        /* 4. RENDER CHANNELS WITH LAZY LOADING & PLACEHOLDER */
+        /* 4. ULTRALIGHT & SUPER FAST CHANNEL RENDER (ZERO LAGGING) */
         function renderChannels(channels) {
             channelContainer.innerHTML = "";
             
@@ -634,11 +642,9 @@
                 const div = document.createElement("div");
                 div.className = "channel-item";
                 
-                let imgLogo = channel.logo ? channel.logo : defaultLogo;
-
-                // loading="lazy" যুক্ত করা হয়েছে যাতে স্ক্রল করার আগে ইমেজ লোড হয়ে ব্রাউজার স্লো না করে
+                // প্রথমে দ্রুত ডিফল্ট লোগো সেট করে দেওয়া হচ্ছে, এতে UI আটকে থাকবে না
                 div.innerHTML = `
-                    <img class="channel-logo" src="${imgLogo}" loading="lazy" onerror="this.onerror=null; this.src='${defaultLogo}';">
+                    <img class="channel-logo" src="${defaultLogo}" data-src="${channel.logo}">
                     <div class="channel-name">${channel.name}</div>
                 `;
 
@@ -652,6 +658,36 @@
             });
 
             channelContainer.appendChild(fragment);
+
+            // চ্যালেনলিস্ট রেন্ডার হওয়ার পর ব্যাকগ্রাউন্ডে অ্যাসিনক্রোনাসলি লোগোগুলো লোড হবে
+            setTimeout(lazyLoadLogos, 50);
+        }
+
+        /* --- ASYNCHRONOUS BACKGROUND LOGO LOADER --- */
+        function lazyLoadLogos() {
+            const images = channelContainer.querySelectorAll(".channel-logo");
+            
+            images.forEach(img => {
+                const realSrc = img.getAttribute("data-src");
+                if (!realSrc) {
+                    img.classList.add("loaded");
+                    return;
+                }
+
+                // একটি সম্পূর্ণ নতুন অবজেক্ট তৈরি করে ব্যাকগ্রাউন্ডে ইমেজ ডাউনলোড করা হচ্ছে
+                const tempImg = new Image();
+                tempImg.src = realSrc;
+
+                tempImg.onload = () => {
+                    img.src = realSrc;
+                    img.classList.add("loaded");
+                };
+
+                tempImg.onerror = () => {
+                    img.src = defaultLogo;
+                    img.classList.add("loaded");
+                };
+            });
         }
 
         /* 5. PLAY STREAM */
