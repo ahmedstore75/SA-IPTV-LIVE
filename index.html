@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>SA IPTV LIVE - Global OTT Player</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -548,14 +549,8 @@
                             currentName = line.split(",")[1] || "Unknown Channel";
                             
                             let logoMatch = line.match(/tvg-logo="(.*?)"/);
-                            let baseLogo = logoMatch ? logoMatch[1] : "";
-                            
-                            // 🔒 MIXED CONTENT FIXER: http:// কে https:// তে কনভার্ট করার লজিক
-                            if (baseLogo.startsWith("http://")) {
-                                currentLogo = baseLogo.replace("http://", "https://");
-                            } else {
-                                currentLogo = baseLogo;
-                            }
+                            // 🔄 এখানে অরিজিনাল লিংক যেভাবে আছে ঠিক সেভাবেই রাখা হলো (কোনো জোরপূর্বক পরিবর্তন ছাড়া)
+                            currentLogo = logoMatch ? logoMatch[1] : "";
 
                             let groupMatch = line.match(/group-title="(.*?)"/);
                             currentCategory = groupMatch ? groupMatch[1] : "Others";
