@@ -444,7 +444,6 @@
         <div class="logo">
             <i class="fa-solid fa-circle-play" style="color: #4634ff;"></i> SA <span>IPTV LIVE</span>
         </div>
-        <!-- ডাউনলোড বাটন সম্পূর্ণ সেফ এলিমেন্ট হিসেবে সেট করা হয়েছে -->
         <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
             <i class="fa-solid fa-download"></i> Download
         </a>
@@ -520,7 +519,7 @@
             categoryMenu.classList.remove("show");
         });
 
-        /* M3U PLAYLIST FETCH & SPEED PARSE (FIXED PARSING CONFLICT) */
+        /* --- M3U PLAYLIST FETCH & STRICT PARSER --- */
         async function fetchPlaylist() {
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
             try {
@@ -528,17 +527,26 @@
                 const data = await response.text();
                 
                 setTimeout(() => {
+                    // শুধু আসল M3U ফাইলের ডাটা আলাদা করতে এক্সট্রা ফিল্টার
                     const lines = data.split("\n");
                     allChannels = [];
                     let currentName = "";
                     let currentLogo = "";
                     let currentCategory = "Others";
-                    let hasInfo = false; // নিশ্চিত করবে যে ইনফো পাওয়ার পরেই কেবল নিচের স্ট্রিম লিংক রিড হবে
+                    let isPlaylistStarted = false;
 
                     for (let i = 0; i < lines.length; i++) {
                         let line = lines[i].trim();
                         
-                        if (line.includes("#EXTINF")) {
+                        // কোড নিশ্চিত করবে যে এটা প্লেলিস্ট ফাইল রিড করছে, অন্য কোনো এইচটিএমএল টেক্সট নয়
+                        if (line.startsWith("#EXTM3U")) {
+                            isPlaylistStarted = true;
+                            continue;
+                        }
+
+                        if (!isPlaylistStarted) continue; 
+
+                        if (line.startsWith("#EXTINF")) {
                             currentName = line.split(",")[1] || "Unknown Channel";
                             
                             let logoMatch = line.match(/tvg-logo="(.*?)"/);
@@ -546,16 +554,13 @@
 
                             let groupMatch = line.match(/group-title="(.*?)"/);
                             currentCategory = groupMatch ? groupMatch[1] : "Others";
-                            hasInfo = true; // ফ্ল্যাগ ট্রু করা হলো
-                        } else if (line.startsWith("http") && hasInfo) {
-                            // শুধুমাত্র #EXTINF এর ঠিক নিচের আসল স্ট্রিম লিংকগুলোকে নেবে
+                        } else if (line.startsWith("http")) {
                             allChannels.push({
                                 name: currentName,
                                 logo: currentLogo,
                                 category: currentCategory,
                                 url: line
                             });
-                            hasInfo = false; // আবার রিসেট করা হলো পরবর্তী চ্যানেলের জন্য
                         }
                     }
 
