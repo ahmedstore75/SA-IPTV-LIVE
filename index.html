@@ -27,20 +27,21 @@
             overflow: hidden;
         }
 
-        /* --- GLOBAL TOP HEADER (আপনার অরিজিনাল লেআউট ৬০px) --- */
+        /* --- GLOBAL TOP HEADER (এক লাইনে লকড) --- */
         header {
             background: #0f1115;
-            padding: 10px 20px;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #1a1e26;
-            height: 60px; /* আপনার রিকোয়েস্ট অনুযায়ী ৬০px */
+            height: 60px; 
             position: sticky;
             top: 0;
             z-index: 9999 !important;
         }
 
+        /* বাম অংশ: টিভির নাম */
         .logo {
             font-size: 18px;
             font-weight: 700;
@@ -56,10 +57,12 @@
             color: #fff;
         }
 
-        .header-right {
+        /* ডান অংশ: ডাউনলোড বাটন এবং চ্যানেল কাউন্ট */
+        .header-actions {
             display: flex;
             align-items: center;
             gap: 12px;
+            white-space: nowrap;
         }
 
         /* --- DOWNLOAD BUTTON STYLE --- */
@@ -76,7 +79,6 @@
             gap: 6px;
             transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
-            white-space: nowrap;
         }
 
         .download-btn:hover {
@@ -85,11 +87,11 @@
             background: linear-gradient(135deg, #3525e6, #6759fa);
         }
 
-        /* --- SEPARATE NOTICE BAR (হেডারের নিচে আলাদা স্লিম নোটিশ) --- */
-        .bottom-notice-bar {
-            background: rgba(15, 17, 21, 0.9);
+        /* --- NEW SEPARATE NOTICE BAR (হেডারের নিচে আলাদা চিকন বার) --- */
+        .sub-notice-bar {
+            background: rgba(17, 20, 26, 0.9);
             border-bottom: 1px solid #1a1e26;
-            height: 30px;
+            height: 32px;
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -107,7 +109,7 @@
             font-weight: 700;
             white-space: nowrap;
             box-shadow: 3px 0 10px rgba(0,0,0,0.3);
-            z-index: 5;
+            z-index: 10;
         }
 
         .notice-title i {
@@ -522,9 +524,8 @@
         /* --- RESPONSIVE FOR MOBILE PORTRAIT --- */
         @media (max-width: 900px) and (orientation: portrait) {
             body { overflow: auto; }
-            header { height: auto; flex-direction: column; gap: 10px; padding: 12px; }
-            .header-right { width: 100%; justify-content: space-between; }
-            .bottom-notice-bar { height: auto; padding: 4px 0; }
+            header { padding: 12px; }
+            .sub-notice-bar { height: auto; padding: 4px 0; }
             .main-container { flex-direction: column; height: auto; overflow: visible; }
             .player-section { flex: none; width: 100%; height: auto; aspect-ratio: 16 / 9; }
             .playlist-section { flex: none; height: 60vh; border-left: none; border-top: 1px solid #1a1e26; }
@@ -538,22 +539,24 @@
         /* --- RESPONSIVE FOR MOBILE LANDSCAPE --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body { overflow: hidden; height: 100vh; width: 100vw; }
-            .playlist-section, header, .bottom-notice-bar, .stream-info { display: none !important; }
+            .playlist-section, header, .sub-notice-bar, .stream-info { display: none !important; }
+            
             .main-container { height: 100vh; width: 100vw; }
             .player-section { flex: 1; height: 100%; width: 100vw; }
-            .video-wrapper { height: 100%; width: 100vw; }
+            .video-wrapper { height: 100%; width: 100vw; display: flex; align-items: center; justify-content: center; }
             video { width: 100vw !important; height: 100% !important; object-fit: contain !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- হেডার বার: টিভির নাম এবং অ্যাকশন বাটনসমূহ সম্পূর্ণ ১ লাইনে লকড -->
     <header>
         <div class="logo">
             <i class="fa-solid fa-circle-play" style="color: #4634ff;"></i> SA <span>IPTV LIVE</span>
         </div>
 
-        <div class="header-right">
+        <div class="header-actions">
             <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
                 <i class="fa-solid fa-download"></i> Download
             </a>
@@ -561,7 +564,8 @@
         </div>
     </header>
 
-    <div class="bottom-notice-bar">
+    <!-- নতুন নোটিশ বার: হেডারের নিচে সম্পূর্ণ আলাদা ও চিকন লাইনে -->
+    <div class="sub-notice-bar">
         <div class="notice-title">
             <i class="fa-solid fa-bell"></i> নোটিশ:
         </div>
