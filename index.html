@@ -239,26 +239,6 @@
             gap: 6px;
         }
 
-        .pip-btn {
-            background: #181d2c;
-            border: 1px solid #28324a;
-            color: #cbd5e1;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-
-        .pip-btn:hover {
-            background: #4634ff;
-            color: #fff;
-            border-color: #4634ff;
-        }
-
         .status-badge {
             background: rgba(70, 52, 255, 0.15);
             color: #796cff;
@@ -590,7 +570,6 @@
                     <h3 id="currentChannelName"><i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> No Channel Selected</h3>
                 </div>
                 <div class="player-controls-right">
-                    <button class="pip-btn" id="pipButton" title="Picture in Picture"><i class="fa-solid fa-window-restore"></i> PiP</button>
                     <div class="status-badge" id="playerStatus">Ready</div>
                 </div>
             </div>
@@ -625,7 +604,6 @@
         const currentChannelName = document.getElementById("currentChannelName");
         const playerStatus = document.getElementById("playerStatus");
         const totalChannelsBadge = document.getElementById("totalChannels");
-        const pipButton = document.getElementById("pipButton");
         
         const videoWrapper = document.getElementById("videoWrapper");
         const prevChannelBtn = document.getElementById("prevChannelBtn");
@@ -664,20 +642,6 @@
         videoWrapper.addEventListener("mousemove", showNavigationButtons);
         videoWrapper.addEventListener("click", showNavigationButtons);
         videoWrapper.addEventListener("touchstart", showNavigationButtons, {passive: true});
-
-        if (document.pictureInPictureEnabled) {
-            pipButton.addEventListener("click", async () => {
-                try {
-                    if (document.pictureInPictureElement) {
-                        await document.exitPictureInPicture();
-                    } else {
-                        await video.requestPictureInPicture();
-                    }
-                } catch (error) {}
-            });
-        } else {
-            pipButton.style.display = "none";
-        }
 
         function renderSkeletons() {
             channelContainer.innerHTML = "";
