@@ -27,14 +27,14 @@
             overflow: hidden;
         }
 
-        /* --- GLOBAL TOP HEADER (মোটা করা হয়েছে এবং নোটিশ ভেতরের যুক্ত) --- */
+        /* --- GLOBAL TOP HEADER (উচ্চতা ৬০px করা হয়েছে) --- */
         header {
             background: #0f1115;
             padding: 10px 20px;
             display: flex;
             align-items: center;
             border-bottom: 1px solid #1a1e26;
-            height: 70px; /* হেডার আরেকটু মোটা করা হলো */
+            height: 60px; /* আপনার রিকোয়েস্ট অনুযায়ী ৬০px করা হলো */
             gap: 20px;
             position: sticky;
             top: 0;
@@ -42,7 +42,7 @@
         }
 
         .logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #4634ff;
             display: flex;
@@ -56,13 +56,13 @@
             color: #fff;
         }
 
-        /* --- HEADER RUNNING NOTICE BAR (হেডারের ভেতরে চিকন নোটিশ) --- */
+        /* --- HEADER RUNNING NOTICE BAR (হেডারের ভেতরের চিকন নোটিশ) --- */
         .header-notice {
             flex: 1;
             background: rgba(17, 20, 26, 0.6);
             border: 1px solid #1a1e26;
             border-radius: 20px;
-            height: 30px; /* চিকন নোটিশ বার */
+            height: 30px; 
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -537,7 +537,7 @@
             body { overflow: hidden; height: 100vh; width: 100vw; }
             .playlist-section, .logo, .download-btn, #totalChannels { display: none !important; }
             
-            /* ল্যান্ডস্কেপ মোডে শুধুমাত্র চিকন নোটিশসহ হেডারটি একদম উপরে লক থাকবে */
+            /* ল্যান্ডস্কেপ মোডে চিকন নোটিশসহ হেডারটি একদম উপরে লক থাকবে */
             header { display: flex !important; width: 100vw; height: 40px; padding: 5px 10px; gap: 0; }
             .header-notice { width: 100%; }
 
