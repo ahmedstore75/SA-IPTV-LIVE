@@ -25,9 +25,10 @@
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
+            padding-top: 83px; /* হেডার (৫৫px) + চিকন নোটিশ বার (২৮px) = ৮৩px ওপরে লক রাখার জন্য */
         }
 
-        /* --- GLOBAL TOP HEADER --- */
+        /* --- GLOBAL TOP HEADER (ALWAYS ON TOP) --- */
         header {
             background: #0f1115;
             padding: 10px 20px;
@@ -37,6 +38,11 @@
             border-bottom: 1px solid #1a1e26;
             height: 55px;
             gap: 15px;
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100vw;
+            z-index: 1000000; 
         }
 
         .logo {
@@ -77,39 +83,43 @@
             background: linear-gradient(135deg, #3525e6, #6759fa);
         }
 
-        /* --- RUNNING NOTICE BAR (UPDATED: FIXED HEADER + MARQUEE) --- */
+        /* --- RUNNING NOTICE BAR (SLIMMED DOWN RIGHT BELOW HEADER) --- */
         .notice-bar {
             background: linear-gradient(90deg, #11141a, #0f1115);
             color: #fff;
-            display: flex;
+            display: flex !important; 
             align-items: center;
-            border-bottom: 2px solid #1a1e26;
-            font-size: 13px;
+            border-bottom: 1px solid #1a1e26;
+            font-size: 11px; /* টেক্সট সাইজ একটু ছোট করা হলো */
             font-weight: 500;
-            height: 40px; /* সামান্য মোটা নোটিশ বার */
+            height: 28px; /* উচ্চতা ৪০px থেকে কমিয়ে ২৮px করা হলো (চিকন করার জন্য) */
             overflow: hidden;
-            position: relative;
+            position: fixed; 
+            top: 55px; 
+            left: 0;
+            width: 100vw;
+            z-index: 999999 !important; 
         }
 
-        /* বাম পাশের স্থির লাল নোটিশ টাইটেল */
         .notice-title {
             background: #ff3838;
             color: #ffffff;
-            padding: 0 15px;
+            padding: 0 12px;
             height: 100%;
             display: flex;
             align-items: center;
             font-weight: 700;
             z-index: 10;
             white-space: nowrap;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            box-shadow: 5px 0 12px rgba(0,0,0,0.5);
+            font-size: 11px;
         }
 
         .notice-title i {
-            margin-right: 6px;
+            margin-right: 4px;
+            font-size: 11px;
         }
 
-        /* ডান পাশের রানিং টেক্সট কন্টেইনার */
         .notice-marquee {
             flex: 1;
             overflow: hidden;
@@ -128,10 +138,9 @@
             margin-right: 60px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        /* গুরুত্বপূর্ণ লাল লেখা (আপনার রিকোয়েস্ট অনুযায়ী লাল করা হয়েছে) */
         .notice-red {
             color: #ff4a4a;
             font-weight: 600;
@@ -149,6 +158,7 @@
             flex: 1;
             overflow: hidden;
             background: #060709;
+            height: calc(100vh - 83px); /* নতুন চিকন নোটিশ বারের সাথে সামঞ্জস্য রেখে হাইট আপডেট */
         }
 
         /* --- LEFT SIDE: CINEMATIC FULL PLAYER --- */
@@ -156,8 +166,9 @@
             flex: 2.4; 
             display: flex;
             flex-direction: column;
-            background: #000;
+            background: #060709;
             position: relative;
+            padding: 15px;
         }
 
         .video-wrapper {
@@ -168,6 +179,16 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(70, 52, 255, 0.25);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 4px 24px rgba(0, 0, 0, 0.6); 
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-wrapper:hover {
+            border-color: rgba(70, 52, 255, 0.5);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 20px rgba(70, 52, 255, 0.15);
         }
 
         video {
@@ -175,6 +196,7 @@
             height: 100%;
             object-fit: contain; 
             background: #000;
+            border-radius: 12px;
         }
 
         /* --- PLAYER OVERLAY NAVIGATION BUTTONS --- */
@@ -218,13 +240,15 @@
         /* স্লিম ইনফো বার */
         .stream-info {
             background: #0f1115;
-            padding: 10px 20px;
+            padding: 0 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #1a1e26;
-            height: 45px;
+            border: 1px solid #1a1e26;
+            height: 48px;
             gap: 10px;
+            margin-top: 12px;
+            border-radius: 8px;
         }
 
         .now-playing h3 {
@@ -242,7 +266,6 @@
             gap: 8px;
         }
 
-        /* PIP BUTTON STYLE */
         .pip-btn {
             background: #181d26;
             border: 1px solid #283142;
@@ -398,7 +421,6 @@
             align-content: start;
         }
 
-        /* PREMIUM CARD DESIGN WITH FIXED HEIGHT */
         .channel-item {
             position: relative;
             display: flex;
@@ -423,7 +445,6 @@
             z-index: 2;
         }
 
-        /* ACTIVE CHANNEL NIYON GLOW */
         .channel-item.active {
             background: linear-gradient(135deg, rgba(70, 52, 255, 0.25) 0%, #13171e 100%);
             border-color: #4634ff;
@@ -439,7 +460,6 @@
             margin: 0 auto;
         }
 
-        /* PREMIUM HEART (FAVORITE) OPTION */
         .fav-heart {
             position: absolute;
             top: 6px;
@@ -476,17 +496,6 @@
             z-index: 3;
         }
 
-        .channel-item:hover .channel-name {
-            color: #ffffff;
-        }
-        
-        .channel-item.active .channel-name {
-            color: #fff;
-            font-weight: 600;
-            background: linear-gradient(to top, #4634ff 0%, rgba(6, 7, 9, 0.95) 100%);
-        }
-
-        /* SKELETON LOADING LOADING SHAPES */
         .skeleton-card {
             height: 115px;
             background: #12161f;
@@ -514,25 +523,31 @@
 
         /* --- RESPONSIVE FOR MOBILE PORTRAIT --- */
         @media (max-width: 900px) and (orientation: portrait) {
-            body { overflow: auto; }
+            body { overflow: auto; padding-top: 83px; }
             .main-container { flex-direction: column; height: auto; overflow: visible; }
-            .player-section { flex: none; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+            .player-section { flex: none; width: 100%; height: auto; aspect-ratio: 16 / 9; padding: 10px; }
             .playlist-section { flex: none; height: 60vh; border-left: none; border-top: 1px solid #1a1e26; }
             .channel-list { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; }
             .channel-item, .skeleton-card { height: 100px; }
             .channel-logo { height: 45px; }
             .category-menu { top: 55px; }
             .nav-overlay-btn { width: 38px; height: 38px; font-size: 14px; } 
+            .video-wrapper { border-radius: 8px; }
+            video { border-radius: 8px; }
         }
 
         /* --- RESPONSIVE FOR MOBILE LANDSCAPE --- */
         @media (max-width: 950px) and (orientation: landscape) {
-            body { overflow: hidden; height: 100vh; width: 100vw; }
-            header, .notice-bar, .stream-info, .playlist-section { display: none !important; }
-            .main-container { height: 100vh; width: 100vw; }
-            .player-section { flex: 1; height: 100vh; width: 100vw; }
-            .video-wrapper { height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; }
-            video { width: 100vw !important; height: 100vh !important; object-fit: fill !important; }
+            body { overflow: hidden; height: 100vh; width: 100vw; padding-top: 28px; }
+            header, .stream-info, .playlist-section { display: none !important; }
+            
+            /* ল্যান্ডস্কেপ মোডে চিকন নোটিশ বারটি ওপরেই থাকবে */
+            .notice-bar { display: flex !important; position: fixed; top: 0; left: 0; width: 100vw; height: 28px; border-bottom: 1px solid #1a1e26; } 
+            
+            .main-container { height: calc(100vh - 28px); width: 100vw; margin-top: 0; }
+            .player-section { flex: 1; height: 100%; width: 100vw; padding: 0; }
+            .video-wrapper { height: 100%; width: 100vw; display: flex; align-items: center; justify-content: center; border-radius: 0; border: none; }
+            video { width: 100vw !important; height: 100% !important; object-fit: contain !important; border-radius: 0; }
         }
     </style>
 </head>
@@ -548,13 +563,10 @@
         <div class="status-badge" id="totalChannels">0 Channels</div>
     </header>
 
-    <!-- নোটিশ বার (স্থির নোটিশ ট্যাগ + স্ক্রোলিং লাল লেখা) -->
     <div class="notice-bar">
-        <!-- বাম সাইডে স্থির লাল ব্যাকগ্রাউন্ডের নোটিশ লেবেল -->
         <div class="notice-title">
             <i class="fa-solid fa-bell"></i> নোটিশ:
         </div>
-        <!-- ডান সাইডে রানিং নোটিশ টেক্সট -->
         <div class="notice-marquee">
             <div class="notice-container">
                 <span class="notice-red"><i class="fa-solid fa-triangle-exclamation"></i> বাফারিং এড়াতে এবং ফুল এইচডি স্মুথ স্ট্রিমিং পেতে সবসময় আপনার ইন্টারনেট কানেকশন ৫ Mbps বা তার বেশি রাখুন।</span>
@@ -639,7 +651,6 @@
             categoryMenu.classList.remove("show");
         });
 
-        /* --- ২ সেকেন্ড অটো-হাইড নেভিগেশন লজিক --- */
         function showNavigationButtons() {
             clearTimeout(hideButtonsTimeout);
             
@@ -656,7 +667,6 @@
         videoWrapper.addEventListener("click", showNavigationButtons);
         videoWrapper.addEventListener("touchstart", showNavigationButtons, {passive: true});
 
-        /* PICTURE IN PICTURE FUNCTIONALITY */
         if (document.pictureInPictureEnabled) {
             pipButton.addEventListener("click", async () => {
                 try {
@@ -673,7 +683,6 @@
             pipButton.style.display = "none";
         }
 
-        /* RENDER SKELETON EFFECT */
         function renderSkeletons() {
             channelContainer.innerHTML = "";
             for(let i=0; i<12; i++) {
@@ -683,7 +692,6 @@
             }
         }
 
-        /* --- M3U PLAYLIST FETCH & PARSER --- */
         async function fetchPlaylist() {
             renderSkeletons();
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
@@ -749,7 +757,6 @@
             }
         }
 
-        /* RENDER CATEGORIES */
         function renderCategories() {
             if (!categoryMenu) return;
             categoryMenu.innerHTML = "";
@@ -788,7 +795,6 @@
             });
         }
 
-        /* FILTER & TRACK CURRENT LIST */
         function filterAndRender() {
             const query = searchInput ? searchInput.value.toLowerCase() : "";
             
@@ -808,7 +814,6 @@
             renderChannels(currentFilteredChannels);
         }
 
-        /* RENDER CHANNELS */
         function renderChannels(channels) {
             if (!channelContainer) return;
             channelContainer.innerHTML = "";
@@ -867,7 +872,6 @@
             }
         }
 
-        /* DYNAMIC CHANNELS SWITCH PREV / NEXT */
         function switchChannel(direction, event) {
             if(event) event.stopPropagation(); 
             if (currentFilteredChannels.length === 0) return;
@@ -894,7 +898,6 @@
         nextChannelBtn.addEventListener("click", (e) => switchChannel("next", e));
         prevChannelBtn.addEventListener("click", (e) => switchChannel("prev", e));
 
-        /* TOGGLE FAVORITE STATUS */
         function toggleFavorite(id, iconEl) {
             if (favoriteChannels.includes(id)) {
                 favoriteChannels = favoriteChannels.filter(favId => favId !== id);
@@ -910,7 +913,6 @@
             }
         }
 
-        /* PLAY STREAM */
         function playStream(url, name) {
             if (currentChannelName) currentChannelName.innerHTML = `<i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> ${name}`;
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-circle-notch fa-spin'></i> Connecting...";
@@ -947,7 +949,6 @@
             }
         }
 
-        /* LIVE SEARCH FILTER */
         if (searchInput) {
             searchInput.addEventListener("input", () => {
                 if (searchInput.value.trim() !== "") {
