@@ -193,17 +193,42 @@
             position: relative;
         }
 
+        /* সার্চ এবং ক্যাটাগরি এক লাইনে গ্রিড (পজিশন অদলবদল করা হয়েছে) */
         .search-box {
             padding: 12px;
             background: #13171e;
             position: relative;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* সমান দুই ভাগে ভাগ */
             gap: 8px;
             border-bottom: 1px solid #1a1e26;
         }
 
+        /* ক্যাটাগরি বাটনকে প্রথমে (বামে) দেখানোর জন্য অর্ডার ১ */
+        .category-dropdown-btn {
+            order: 1;
+            width: 100%;
+            padding: 8px 12px;
+            background: #060709;
+            border: 1px solid #222936;
+            border-radius: 6px;
+            color: #cbd5e1;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .category-dropdown-btn:hover {
+            border-color: #4634ff;
+            color: #fff;
+        }
+
+        /* সার্চ ইনপুটকে পরে (ডানে) দেখানোর জন্য অর্ডার ২ */
         .input-wrapper {
+            order: 2;
             position: relative;
             width: 100%;
         }
@@ -234,31 +259,10 @@
             box-shadow: 0 0 6px rgba(70, 52, 255, 0.2);
         }
 
-        /* --- CATEGORY DROPDOWN BUTTON --- */
-        .category-dropdown-btn {
-            width: 100%;
-            padding: 8px 12px;
-            background: #060709;
-            border: 1px solid #222936;
-            border-radius: 6px;
-            color: #cbd5e1;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
-        }
-
-        .category-dropdown-btn:hover {
-            border-color: #4634ff;
-            color: #fff;
-        }
-
         /* --- DYNAMIC CATEGORY MENU --- */
         .category-menu {
             position: absolute;
-            top: 95px; 
+            top: 55px; 
             left: 12px;
             right: 12px;
             background: #13171e;
@@ -296,61 +300,75 @@
             font-weight: 500;
         }
 
-        /* VERTICAL SLIM LIST */
+        /* NETFLIX STYLE GRID - 3 COLUMNS DEFAULT (PC) */
         .channel-list {
             flex: 1;
             overflow-y: auto;
-            padding: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            align-content: start;
         }
 
-        /* PREMIUM SLIM ROW DESIGN */
+        /* NETFLIX PREMIUM CARD DESIGN */
         .channel-item {
+            position: relative;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            padding: 8px 10px;
-            background: #13171e;
+            justify-content: flex-start;
+            height: 115px;
+            background: #181d26;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.15s ease;
-            border: 1px solid transparent;
-            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid #283142;
+            overflow: hidden;
+            padding: 8px;
         }
 
         .channel-item:hover {
-            background: #1a1f29;
-            transform: translateX(3px);
-            border-color: rgba(70, 52, 255, 0.3);
+            background: #1f2633;
+            transform: scale(1.05);
+            border-color: #4634ff;
+            box-shadow: 0 5px 15px rgba(70, 52, 255, 0.4);
+            z-index: 2;
         }
 
         .channel-item.active {
-            background: linear-gradient(90deg, rgba(70, 52, 255, 0.2) 0%, #13171e 100%);
+            background: linear-gradient(135deg, rgba(70, 52, 255, 0.25) 0%, #13171e 100%);
             border-color: #4634ff;
+            box-shadow: 0 0 12px rgba(70, 52, 255, 0.5);
         }
 
-        /* FLAT SQUARE LOGO */
+        /* NETFLIX STYLE LOGO */
         .channel-logo {
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
+            width: 100%;
+            height: 55px;
             object-fit: contain;
-            background: #060709;
-            padding: 1px;
-            border: 1px solid #222936;
-            flex-shrink: 0;
+            background: transparent;
+            display: block;
+            margin: 0 auto;
         }
 
+        /* NETFLIX BOTTOM OVERLAY TEXT */
         .channel-name {
-            font-size: 12.5px;
-            font-weight: 400;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(6, 7, 9, 1) 0%, rgba(6, 7, 9, 0.95) 80%, rgba(6, 7, 9, 0) 100%);
+            font-size: 11px;
+            font-weight: 500;
             color: #cbd5e1;
+            padding: 14px 4px 6px 4px;
+            text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            flex: 1;
+            width: 100%;
+            z-index: 3;
         }
 
         .channel-item:hover .channel-name {
@@ -358,8 +376,9 @@
         }
         
         .channel-item.active .channel-name {
-            color: #4634ff;
-            font-weight: 500;
+            color: #fff;
+            font-weight: 600;
+            background: linear-gradient(to top, #4634ff 0%, rgba(6, 7, 9, 0.95) 100%);
         }
 
         /* --- GLOBAL MINIMALIST SCROLLBAR --- */
@@ -399,6 +418,20 @@
                 height: 60vh;
                 border-left: none;
                 border-top: 1px solid #1a1e26;
+            }
+            .channel-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                padding: 10px;
+            }
+            .channel-item {
+                height: 100px;
+            }
+            .channel-logo {
+                height: 45px;
+            }
+            .category-menu {
+                top: 55px;
             }
         }
 
@@ -466,7 +499,7 @@
             </div>
             <div class="stream-info">
                 <div class="now-playing">
-                    <h3 id="currentChannelName"><i class="fa-solid fa-satellite-dish" style="color:#555;"></i> No Channel Selected</h3>
+                    <h3 id="currentChannelName"><i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> No Channel Selected</h3>
                 </div>
                 <div class="status-badge" id="playerStatus">Ready</div>
             </div>
@@ -474,15 +507,15 @@
 
         <div class="playlist-section">
             <div class="search-box">
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="searchChannel" placeholder="Search channel...">
-                </div>
-                
                 <button class="category-dropdown-btn" id="categoryBtn">
                     <span id="selectedCategoryText"><i class="fa-solid fa-layer-group"></i> All Categories</span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </button>
+
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchChannel" placeholder="Search channel...">
+                </div>
             </div>
             
             <div class="category-menu" id="categoryMenu"></div>
@@ -519,7 +552,7 @@
             categoryMenu.classList.remove("show");
         });
 
-        /* --- M3U PLAYLIST FETCH & STRICT PARSER --- */
+        /* --- M3U PLAYLIST FETCH & PARSER --- */
         async function fetchPlaylist() {
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
             try {
@@ -527,7 +560,6 @@
                 const data = await response.text();
                 
                 setTimeout(() => {
-                    // শুধু আসল M3U ফাইলের ডাটা আলাদা করতে এক্সট্রা ফিল্টার
                     const lines = data.split("\n");
                     allChannels = [];
                     let currentName = "";
@@ -538,7 +570,6 @@
                     for (let i = 0; i < lines.length; i++) {
                         let line = lines[i].trim();
                         
-                        // কোড নিশ্চিত করবে যে এটা প্লেলিস্ট ফাইল রিড করছে, অন্য কোনো এইচটিএমএল টেক্সট নয়
                         if (line.startsWith("#EXTM3U")) {
                             isPlaylistStarted = true;
                             continue;
@@ -639,7 +670,7 @@
             channelContainer.innerHTML = "";
             
             if(channels.length === 0) {
-                channelContainer.innerHTML = "<div style='text-align:center; padding:20px; color:#555; font-size: 12px;'>No channels found!</div>";
+                channelContainer.innerHTML = "<div style='grid-column: 1 / -1; text-align:center; padding:20px; color:#555; font-size: 12px;'>No channels found!</div>";
                 return;
             }
 
