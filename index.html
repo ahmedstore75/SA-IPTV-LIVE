@@ -27,16 +27,15 @@
             overflow: hidden;
         }
 
-        /* --- GLOBAL TOP HEADER (৩ ভাগে বিভক্ত করে ১ লাইনে লকড) --- */
+        /* --- GLOBAL TOP HEADER (আপনার অরিজিনাল লেআউট ৬০px) --- */
         header {
             background: #0f1115;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: auto 1fr auto; /* বাম, মাঝ ও ডান ৩টি ফিক্সড জোনে ভাগ করা হলো */
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #1a1e26;
-            height: 60px; 
-            gap: 20px;
+            height: 60px; /* আপনার রিকোয়েস্ট অনুযায়ী ৬০px */
             position: sticky;
             top: 0;
             z-index: 9999 !important;
@@ -51,26 +50,50 @@
             gap: 8px;
             text-shadow: 0 0 12px rgba(70, 52, 255, 0.4);
             white-space: nowrap;
-            justify-self: start; /* একদম বামে ফিক্সড */
         }
 
         .logo span {
             color: #fff;
         }
 
-        /* --- HEADER RUNNING NOTICE BAR (মাঝখানের খালি জায়গা অনুযায়ী চওড়া হবে) --- */
-        .header-notice {
-            background: rgba(17, 20, 26, 0.6);
-            border: 1px solid #1a1e26;
-            border-radius: 20px;
-            height: 32px; 
-            overflow: hidden;
+        .header-right {
             display: flex;
             align-items: center;
-            padding-right: 10px;
-            width: 100%;
-            max-width: 700px; /* অতিরিক্ত চড়াও হয়ে বাটনকে চাপ দেবে না */
-            justify-self: center; /* একদম মাঝখানে থাকবে */
+            gap: 12px;
+        }
+
+        /* --- DOWNLOAD BUTTON STYLE --- */
+        .download-btn {
+            background: linear-gradient(135deg, #4634ff, #796cff);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
+            white-space: nowrap;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(70, 52, 255, 0.5);
+            background: linear-gradient(135deg, #3525e6, #6759fa);
+        }
+
+        /* --- SEPARATE NOTICE BAR (হেডারের নিচে আলাদা স্লিম নোটিশ) --- */
+        .bottom-notice-bar {
+            background: rgba(15, 17, 21, 0.9);
+            border-bottom: 1px solid #1a1e26;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            z-index: 9998;
         }
 
         .notice-title {
@@ -82,10 +105,9 @@
             align-items: center;
             font-size: 11px;
             font-weight: 700;
-            border-top-left-radius: 19px;
-            border-bottom-left-radius: 19px;
             white-space: nowrap;
             box-shadow: 3px 0 10px rgba(0,0,0,0.3);
+            z-index: 5;
         }
 
         .notice-title i {
@@ -126,37 +148,6 @@
         .notice-red {
             color: #ff4a4a;
             font-weight: 500;
-        }
-
-        /* --- RIGHT ACTION AREA (ডাউনলোড ও চ্যানেল কাউন্ট একদম ডান পাশে এক লাইনে লকড) --- */
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-self: end; /* একদম ডানে ফিক্সড */
-            white-space: nowrap;
-        }
-
-        /* --- DOWNLOAD BUTTON STYLE --- */
-        .download-btn {
-            background: linear-gradient(135deg, #4634ff, #796cff);
-            color: #ffffff;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
-        }
-
-        .download-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 15px rgba(70, 52, 255, 0.5);
-            background: linear-gradient(135deg, #3525e6, #6759fa);
         }
 
         /* --- GLOBAL LAYOUT CONTAINER --- */
@@ -531,10 +522,9 @@
         /* --- RESPONSIVE FOR MOBILE PORTRAIT --- */
         @media (max-width: 900px) and (orientation: portrait) {
             body { overflow: auto; }
-            header { display: flex; height: auto; flex-direction: column; gap: 10px; padding: 12px; }
-            .logo { justify-self: center; }
-            .header-notice { width: 100%; max-width: 100%; justify-self: center; }
-            .header-actions { width: 100%; justify-content: space-between; justify-self: center; }
+            header { height: auto; flex-direction: column; gap: 10px; padding: 12px; }
+            .header-right { width: 100%; justify-content: space-between; }
+            .bottom-notice-bar { height: auto; padding: 4px 0; }
             .main-container { flex-direction: column; height: auto; overflow: visible; }
             .player-section { flex: none; width: 100%; height: auto; aspect-ratio: 16 / 9; }
             .playlist-section { flex: none; height: 60vh; border-left: none; border-top: 1px solid #1a1e26; }
@@ -548,16 +538,11 @@
         /* --- RESPONSIVE FOR MOBILE LANDSCAPE --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body { overflow: hidden; height: 100vh; width: 100vw; }
-            .playlist-section, .logo, .header-actions { display: none !important; }
-            
-            header { display: flex !important; width: 100vw; height: 40px; padding: 5px 10px; gap: 0; }
-            .header-notice { width: 100%; max-width: 100%; }
-
-            .main-container { height: calc(100vh - 40px); width: 100vw; }
+            .playlist-section, header, .bottom-notice-bar, .stream-info { display: none !important; }
+            .main-container { height: 100vh; width: 100vw; }
             .player-section { flex: 1; height: 100%; width: 100vw; }
-            .video-wrapper { height: 100%; width: 100vw; display: flex; align-items: center; justify-content: center; }
+            .video-wrapper { height: 100%; width: 100vw; }
             video { width: 100vw !important; height: 100% !important; object-fit: contain !important; }
-            .stream-info { display: none !important; } 
         }
     </style>
 </head>
@@ -568,28 +553,28 @@
             <i class="fa-solid fa-circle-play" style="color: #4634ff;"></i> SA <span>IPTV LIVE</span>
         </div>
 
-        <div class="header-notice">
-            <div class="notice-title">
-                <i class="fa-solid fa-bell"></i> নোটিশ:
-            </div>
-            <div class="notice-marquee-wrapper">
-                <marquee behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();">
-                    <div class="notice-content">
-                        <span class="notice-red"><i class="fa-solid fa-triangle-exclamation"></i> বাফারিং এড়াতে এবং ফুল এইচডি স্মুথ স্ট্রিমিং পেতে সবসময় আপনার internet কানেকশন ৫ Mbps বা তার বেশি রাখুন।</span>
-                        <span class="notice-red"><i class="fa-solid fa-bullhorn"></i> স্বাগতম SA IPTV LIVE প্লেয়ারে! এখানে আপনি পাবেন ২৪/৭ লাইভ টিভি, খেলাুধলা, খবর এবং বিনোদন একদম বিনামূল্যে।</span>
-                        <span class="notice-red"><i class="fa-solid fa-heart"></i> আমাদের সাথে থাকার জন্য আপনাকে ধন্যবাদ! এনজয় স্ট্রিমিং।</span>
-                    </div>
-                </marquee>
-            </div>
-        </div>
-
-        <div class="header-actions">
+        <div class="header-right">
             <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
                 <i class="fa-solid fa-download"></i> Download
             </a>
             <div class="status-badge" id="totalChannels">0 Channels</div>
         </div>
     </header>
+
+    <div class="bottom-notice-bar">
+        <div class="notice-title">
+            <i class="fa-solid fa-bell"></i> নোটিশ:
+        </div>
+        <div class="notice-marquee-wrapper">
+            <marquee behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();">
+                <div class="notice-content">
+                    <span class="notice-red"><i class="fa-solid fa-triangle-exclamation"></i> বাফারিং এড়াতে এবং ফুল এইচডি স্মুথ স্ট্রিমিং পেতে সবসময় আপনার internet কানেকশন ৫ Mbps বা তার বেশি রাখুন।</span>
+                    <span class="notice-red"><i class="fa-solid fa-bullhorn"></i> স্বাগতম SA IPTV LIVE প্লেয়ারে! এখানে আপনি পাবেন ২৪/৭ লাইভ টিভি, খেলাুধলা, খবর এবং বিনোদন একদম বিনামূল্যে।</span>
+                    <span class="notice-red"><i class="fa-solid fa-heart"></i> আমাদের সাথে থাকার জন্য আপনাকে ধন্যবাদ! এনজয় স্ট্রিমিং।</span>
+                </div>
+            </marquee>
+        </div>
+    </div>
 
     <div class="main-container">
         
@@ -666,7 +651,6 @@
             categoryMenu.classList.remove("show");
         });
 
-        /* --- ২ সেকেন্ড অটো-হাইড নেভিগেশন লজিক --- */
         function showNavigationButtons() {
             clearTimeout(hideButtonsTimeout);
             
@@ -683,7 +667,6 @@
         videoWrapper.addEventListener("click", showNavigationButtons);
         videoWrapper.addEventListener("touchstart", showNavigationButtons, {passive: true});
 
-        /* PICTURE IN PICTURE FUNCTIONALITY */
         if (document.pictureInPictureEnabled) {
             pipButton.addEventListener("click", async () => {
                 try {
@@ -700,7 +683,6 @@
             pipButton.style.display = "none";
         }
 
-        /* RENDER SKELETON EFFECT */
         function renderSkeletons() {
             channelContainer.innerHTML = "";
             for(let i=0; i<12; i++) {
@@ -710,7 +692,6 @@
             }
         }
 
-        /* --- M3U PLAYLIST FETCH & PARSER --- */
         async function fetchPlaylist() {
             renderSkeletons();
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Loading...";
@@ -776,7 +757,6 @@
             }
         }
 
-        /* RENDER CATEGORIES */
         function renderCategories() {
             if (!categoryMenu) return;
             categoryMenu.innerHTML = "";
@@ -815,7 +795,6 @@
             });
         }
 
-        /* FILTER & TRACK CURRENT LIST */
         function filterAndRender() {
             const query = searchInput ? searchInput.value.toLowerCase() : "";
             
@@ -835,7 +814,6 @@
             renderChannels(currentFilteredChannels);
         }
 
-        /* RENDER CHANNELS */
         function renderChannels(channels) {
             if (!channelContainer) return;
             channelContainer.innerHTML = "";
@@ -894,7 +872,6 @@
             }
         }
 
-        /* DYNAMIC CHANNELS SWITCH PREV / NEXT */
         function switchChannel(direction, event) {
             if(event) event.stopPropagation(); 
             if (currentFilteredChannels.length === 0) return;
@@ -921,7 +898,6 @@
         nextChannelBtn.addEventListener("click", (e) => switchChannel("next", e));
         prevChannelBtn.addEventListener("click", (e) => switchChannel("prev", e));
 
-        /* TOGGLE FAVORITE STATUS */
         function toggleFavorite(id, iconEl) {
             if (favoriteChannels.includes(id)) {
                 favoriteChannels = favoriteChannels.filter(favId => favId !== id);
@@ -937,7 +913,6 @@
             }
         }
 
-        /* PLAY STREAM */
         function playStream(url, name) {
             if (currentChannelName) currentChannelName.innerHTML = `<i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> ${name}`;
             if (playerStatus) playerStatus.innerHTML = "<i class='fa-solid fa-circle-notch fa-spin'></i> Connecting...";
@@ -974,7 +949,6 @@
             }
         }
 
-        /* LIVE SEARCH FILTER */
         if (searchInput) {
             searchInput.addEventListener("input", () => {
                 if (searchInput.value.trim() !== "") {
