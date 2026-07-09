@@ -27,16 +27,16 @@
             overflow: hidden;
         }
 
-        /* --- GLOBAL TOP HEADER (এক লাইনে ফিক্সড করার জন্য অপ্টিমাইজড) --- */
+        /* --- GLOBAL TOP HEADER (৩ ভাগে বিভক্ত করে ১ লাইনে লকড) --- */
         header {
             background: #0f1115;
             padding: 0 20px;
-            display: flex;
+            display: grid;
+            grid-template-columns: auto 1fr auto; /* বাম, মাঝ ও ডান ৩টি ফিক্সড জোনে ভাগ করা হলো */
             align-items: center;
-            justify-content: space-between;
             border-bottom: 1px solid #1a1e26;
             height: 60px; 
-            gap: 15px;
+            gap: 20px;
             position: sticky;
             top: 0;
             z-index: 9999 !important;
@@ -51,16 +51,15 @@
             gap: 8px;
             text-shadow: 0 0 12px rgba(70, 52, 255, 0.4);
             white-space: nowrap;
-            flex-shrink: 0; /* লোগো যেন ছোট না হয়ে যায় */
+            justify-self: start; /* একদম বামে ফিক্সড */
         }
 
         .logo span {
             color: #fff;
         }
 
-        /* --- HEADER RUNNING NOTICE BAR (মাঝখানের ফ্লেক্সিবল নোটিশ) --- */
+        /* --- HEADER RUNNING NOTICE BAR (মাঝখানের খালি জায়গা অনুযায়ী চওড়া হবে) --- */
         .header-notice {
-            flex: 1;
             background: rgba(17, 20, 26, 0.6);
             border: 1px solid #1a1e26;
             border-radius: 20px;
@@ -69,7 +68,9 @@
             display: flex;
             align-items: center;
             padding-right: 10px;
-            max-width: 55%; /* বেশি বড় হয়ে বাটন চাপাবে না */
+            width: 100%;
+            max-width: 700px; /* অতিরিক্ত চড়াও হয়ে বাটনকে চাপ দেবে না */
+            justify-self: center; /* একদম মাঝখানে থাকবে */
         }
 
         .notice-title {
@@ -127,12 +128,13 @@
             font-weight: 500;
         }
 
-        /* --- RIGHT ACTION AREA (ডাউনলোড এবং চ্যানেল কাউন্ট এক লাইনে রাখার জন্য) --- */
+        /* --- RIGHT ACTION AREA (ডাউনলোড ও চ্যানেল কাউন্ট একদম ডান পাশে এক লাইনে লকড) --- */
         .header-actions {
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-shrink: 0;
+            justify-self: end; /* একদম ডানে ফিক্সড */
+            white-space: nowrap;
         }
 
         /* --- DOWNLOAD BUTTON STYLE --- */
@@ -149,7 +151,6 @@
             gap: 6px;
             transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(70, 52, 255, 0.3);
-            white-space: nowrap;
         }
 
         .download-btn:hover {
@@ -530,9 +531,10 @@
         /* --- RESPONSIVE FOR MOBILE PORTRAIT --- */
         @media (max-width: 900px) and (orientation: portrait) {
             body { overflow: auto; }
-            header { height: auto; flex-direction: column; gap: 10px; padding: 12px; }
-            .header-notice { width: 100%; order: 3; max-width: 100%; }
-            .header-actions { order: 2; width: 100%; justify-content: space-between; }
+            header { display: flex; height: auto; flex-direction: column; gap: 10px; padding: 12px; }
+            .logo { justify-self: center; }
+            .header-notice { width: 100%; max-width: 100%; justify-self: center; }
+            .header-actions { width: 100%; justify-content: space-between; justify-self: center; }
             .main-container { flex-direction: column; height: auto; overflow: visible; }
             .player-section { flex: none; width: 100%; height: auto; aspect-ratio: 16 / 9; }
             .playlist-section { flex: none; height: 60vh; border-left: none; border-top: 1px solid #1a1e26; }
