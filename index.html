@@ -77,30 +77,28 @@
             background: linear-gradient(135deg, #3525e6, #6759fa);
         }
 
-        /* --- RUNNING NOTICE BAR (স্লিম এবং ফিক্সড করা হয়েছে) --- */
+        /* --- RUNNING NOTICE BAR (UPDATED: FIXED HEADER + MARQUEE) --- */
         .notice-bar {
             background: linear-gradient(90deg, #11141a, #0f1115);
             color: #fff;
             display: flex;
             align-items: center;
             border-bottom: 2px solid #1a1e26;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 500;
-            height: 30px; /* আপনার রিকোয়েস্ট অনুযায়ী একদম চিকন করা হলো */
+            height: 40px; /* সামান্য মোটা নোটিশ বার */
             overflow: hidden;
             position: relative;
-            z-index: 999;
         }
 
         /* বাম পাশের স্থির লাল নোটিশ টাইটেল */
         .notice-title {
             background: #ff3838;
             color: #ffffff;
-            padding: 0 12px;
+            padding: 0 15px;
             height: 100%;
             display: flex;
             align-items: center;
-            font-size: 11px;
             font-weight: 700;
             z-index: 10;
             white-space: nowrap;
@@ -133,7 +131,7 @@
             gap: 8px;
         }
 
-        /* গুরুত্বপূর্ণ লাল লেখা */
+        /* গুরুত্বপূর্ণ লাল লেখা (আপনার রিকোয়েস্ট অনুযায়ী লাল করা হয়েছে) */
         .notice-red {
             color: #ff4a4a;
             font-weight: 600;
@@ -527,18 +525,14 @@
             .nav-overlay-btn { width: 38px; height: 38px; font-size: 14px; } 
         }
 
-        /* --- RESPONSIVE FOR MOBILE LANDSCAPE (FIXED: NOTICE BAR WILL NOT HIDE ANYMORE) --- */
+        /* --- RESPONSIVE FOR MOBILE LANDSCAPE --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body { overflow: hidden; height: 100vh; width: 100vw; }
-            header, .stream-info, .playlist-section { display: none !important; }
-            
-            /* নোটিশ বার এখন ল্যান্ডস্কেপ মোডেও দৃশ্যমান থাকবে */
-            .notice-bar { display: flex !important; width: 100vw; height: 28px; } 
-            
-            .main-container { height: calc(100vh - 28px); width: 100vw; }
-            .player-section { flex: 1; height: 100%; width: 100vw; }
-            .video-wrapper { height: 100%; width: 100vw; display: flex; align-items: center; justify-content: center; }
-            video { width: 100vw !important; height: 100% !important; object-fit: contain !important; }
+            header, .notice-bar, .stream-info, .playlist-section { display: none !important; }
+            .main-container { height: 100vh; width: 100vw; }
+            .player-section { flex: 1; height: 100vh; width: 100vw; }
+            .video-wrapper { height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; }
+            video { width: 100vw !important; height: 100vh !important; object-fit: fill !important; }
         }
     </style>
 </head>
@@ -554,10 +548,13 @@
         <div class="status-badge" id="totalChannels">0 Channels</div>
     </header>
 
+    <!-- নোটিশ বার (স্থির নোটিশ ট্যাগ + স্ক্রোলিং লাল লেখা) -->
     <div class="notice-bar">
+        <!-- বাম সাইডে স্থির লাল ব্যাকগ্রাউন্ডের নোটিশ লেবেল -->
         <div class="notice-title">
             <i class="fa-solid fa-bell"></i> নোটিশ:
         </div>
+        <!-- ডান সাইডে রানিং নোটিশ টেক্সট -->
         <div class="notice-marquee">
             <div class="notice-container">
                 <span class="notice-red"><i class="fa-solid fa-triangle-exclamation"></i> বাফারিং এড়াতে এবং ফুল এইচডি স্মুথ স্ট্রিমিং পেতে সবসময় আপনার ইন্টারনেট কানেকশন ৫ Mbps বা তার বেশি রাখুন।</span>
