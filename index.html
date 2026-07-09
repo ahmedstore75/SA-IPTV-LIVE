@@ -27,15 +27,16 @@
             overflow: hidden;
         }
 
-        /* --- GLOBAL TOP HEADER (উচ্চতা ৬০px করা হয়েছে) --- */
+        /* --- GLOBAL TOP HEADER (এক লাইনে ফিক্সড করার জন্য অপ্টিমাইজড) --- */
         header {
             background: #0f1115;
-            padding: 10px 20px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             border-bottom: 1px solid #1a1e26;
-            height: 60px; /* আপনার রিকোয়েস্ট অনুযায়ী ৬০px করা হলো */
-            gap: 20px;
+            height: 60px; 
+            gap: 15px;
             position: sticky;
             top: 0;
             z-index: 9999 !important;
@@ -50,23 +51,25 @@
             gap: 8px;
             text-shadow: 0 0 12px rgba(70, 52, 255, 0.4);
             white-space: nowrap;
+            flex-shrink: 0; /* লোগো যেন ছোট না হয়ে যায় */
         }
 
         .logo span {
             color: #fff;
         }
 
-        /* --- HEADER RUNNING NOTICE BAR (হেডারের ভেতরের চিকন নোটিশ) --- */
+        /* --- HEADER RUNNING NOTICE BAR (মাঝখানের ফ্লেক্সিবল নোটিশ) --- */
         .header-notice {
             flex: 1;
             background: rgba(17, 20, 26, 0.6);
             border: 1px solid #1a1e26;
             border-radius: 20px;
-            height: 30px; 
+            height: 32px; 
             overflow: hidden;
             display: flex;
             align-items: center;
             padding-right: 10px;
+            max-width: 55%; /* বেশি বড় হয়ে বাটন চাপাবে না */
         }
 
         .notice-title {
@@ -122,6 +125,14 @@
         .notice-red {
             color: #ff4a4a;
             font-weight: 500;
+        }
+
+        /* --- RIGHT ACTION AREA (ডাউনলোড এবং চ্যানেল কাউন্ট এক লাইনে রাখার জন্য) --- */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
         }
 
         /* --- DOWNLOAD BUTTON STYLE --- */
@@ -520,8 +531,8 @@
         @media (max-width: 900px) and (orientation: portrait) {
             body { overflow: auto; }
             header { height: auto; flex-direction: column; gap: 10px; padding: 12px; }
-            .header-notice { width: 100%; order: 3; }
-            .download-btn { order: 2; margin-left: 0; }
+            .header-notice { width: 100%; order: 3; max-width: 100%; }
+            .header-actions { order: 2; width: 100%; justify-content: space-between; }
             .main-container { flex-direction: column; height: auto; overflow: visible; }
             .player-section { flex: none; width: 100%; height: auto; aspect-ratio: 16 / 9; }
             .playlist-section { flex: none; height: 60vh; border-left: none; border-top: 1px solid #1a1e26; }
@@ -535,11 +546,10 @@
         /* --- RESPONSIVE FOR MOBILE LANDSCAPE --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body { overflow: hidden; height: 100vh; width: 100vw; }
-            .playlist-section, .logo, .download-btn, #totalChannels { display: none !important; }
+            .playlist-section, .logo, .header-actions { display: none !important; }
             
-            /* ল্যান্ডস্কেপ মোডে চিকন নোটিশসহ হেডারটি একদম উপরে লক থাকবে */
             header { display: flex !important; width: 100vw; height: 40px; padding: 5px 10px; gap: 0; }
-            .header-notice { width: 100%; }
+            .header-notice { width: 100%; max-width: 100%; }
 
             .main-container { height: calc(100vh - 40px); width: 100vw; }
             .player-section { flex: 1; height: 100%; width: 100vw; }
@@ -571,10 +581,12 @@
             </div>
         </div>
 
-        <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
-            <i class="fa-solid fa-download"></i> Download
-        </a>
-        <div class="status-badge" id="totalChannels">0 Channels</div>
+        <div class="header-actions">
+            <a href="https://upload.app/download/sa-iptv-live/saiptv.live/79ac05ab30ab537097139b35eab853573cef5e736ff078c973ec0e6c8416627c" target="_blank" class="download-btn">
+                <i class="fa-solid fa-download"></i> Download
+            </a>
+            <div class="status-badge" id="totalChannels">0 Channels</div>
+        </div>
     </header>
 
     <div class="main-container">
