@@ -339,23 +339,36 @@
             .channel-logo { height: 40px; }
         }
 
-        /* --- 🔥 RESPONSIVE FOR MOBILE LANDSCAPE (FIXED FULLSCREEN/FIT) 🔥 --- */
+        /* --- 🔥 RESPONSIVE FOR MOBILE LANDSCAPE (STRETCHED/NO BLACK BORDERS) 🔥 --- */
         @media (max-width: 950px) and (orientation: landscape) {
-            body { overflow: hidden !important; height: 100vh !important; width: 100vw !important; padding-top: 0 !important; }
+            body { overflow: hidden !important; height: 100vh !important; width: 100vw !important; padding-top: 0 !important; margin: 0 !important; }
             header, .stream-info, .playlist-section, .notice-bar { display: none !important; }
             
-            .main-container { height: 100vh !important; width: 100vw !important; }
+            .main-container { height: 100vh !important; width: 100vw !important; margin: 0 !important; padding: 0 !important; }
             .player-section { flex: 1 !important; height: 100vh !important; width: 100vw !important; padding: 0 !important; margin: 0 !important; }
             
-            /* ভিডিও র‍্যাপার পুরো স্ক্রিনে ফিট করা হলো */
-            .video-wrapper { height: 100vh !important; width: 100vw !important; border-radius: 0 !important; border: none !important; }
+            /* ভিডিও র‍্যাপার পুরো ডিসপ্লে জুড়ে কোনো মার্জিন ছাড়া লক করা হলো */
+            .video-wrapper { 
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                height: 100vh !important; 
+                width: 100vw !important; 
+                border-radius: 0 !important; 
+                border: none !important; 
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #000;
+            }
             
-            /* ⚡ ভিডিও যাতে কোনো কালো বর্ডার ছাড়া একদম ডিসপ্লে ফিট হয়ে ছড়ায় ⚡ */
+            /* ⚡ ভিডিও কোনো ক্রপ ছাড়া একদম পুরো স্ক্রিনে ফিট (fill) হবে ⚡ */
             video { 
                 width: 100vw !important; 
                 height: 100vh !important; 
-                object-fit: cover !important; /* স্ক্রিন ফিট নিশ্চিত করতে কভার করা হলো */
-                background: #000;
+                object-fit: fill !important; /* জেনুইন ফুলস্ক্রিন ও নো-ক্রপ স্ট্রেচ এফেক্ট */
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
             }
             
             .nav-overlay-btn { width: 60px; height: 60px; font-size: 22px; background: rgba(15, 18, 29, 0.9); border: 1px solid rgba(255, 255, 255, 0.3); }
@@ -400,7 +413,6 @@
                         <button class="control-btn" id="muteBtn"><i class="fa-solid fa-volume-high"></i></button>
                         <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1">
                     </div>
-                    <!-- ফিট স্ক্রিন/ফুলস্ক্রিন টগল বাটন -->
                     <button class="control-btn" id="fullscreenBtn" style="margin-left: auto;" title="Fit Screen/Fullscreen"><i class="fa-solid fa-expand"></i></button>
                 </div>
             </div>
@@ -501,14 +513,13 @@
             muteBtn.innerHTML = video.volume == 0 ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
         });
 
-        // ফুলস্ক্রিন ও জেনুইন ফিট অ্যাসপেক্ট রেশিও টগল লজিক
         fullscreenBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             if (!document.fullscreenElement) {
                 if(videoWrapper.requestFullscreen) {
                     videoWrapper.requestFullscreen();
                 } else if(videoWrapper.webkitRequestFullscreen) {
-                    videoWrapper.webkitRequestFullscreen(); // Safari/iOS
+                    videoWrapper.webkitRequestFullscreen(); 
                 }
                 fullscreenBtn.innerHTML = '<i class="fa-solid fa-compress"></i>';
             } else {
