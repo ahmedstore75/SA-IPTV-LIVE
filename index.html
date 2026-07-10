@@ -170,8 +170,7 @@
             position: relative;
             border-radius: 12px;
             overflow: hidden;
-            /* বর্ডার আপডেট করা হয়েছে - হালকা পার্পল */
-            border: 2px solid rgba(139, 92, 246, 0.6);
+            border: 1px solid rgba(70, 52, 255, 0.2);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); 
         }
 
@@ -238,6 +237,26 @@
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+
+        .pip-btn {
+            background: #181d2c;
+            border: 1px solid #28324a;
+            color: #cbd5e1;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .pip-btn:hover {
+            background: #4634ff;
+            color: #fff;
+            border-color: #4634ff;
         }
 
         .status-badge {
@@ -370,6 +389,7 @@
             backface-visibility: hidden;
         }
 
+        /* 👑 সবচাইতে সুন্দর ও প্রিমিয়াম ওটিটি থিম (Deep Night Purple) 👑 */
         .channel-item {
             position: relative;
             display: flex;
@@ -377,6 +397,7 @@
             align-items: center;
             justify-content: flex-start;
             height: 110px;
+            /* রাজকীয় ডিপ পার্পল ডার্ক থিম */
             background: linear-gradient(145deg, #130e21 0%, #0a0712 100%); 
             border: 1px solid rgba(139, 92, 246, 0.15); 
             border-radius: 14px;
@@ -386,10 +407,12 @@
             padding: 14px;
             backdrop-filter: blur(8px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            
             content-visibility: auto;
             contain-intrinsic-size: 110px; 
         }
 
+        /* কার্ড হোভার ইফেক্ট */
         .channel-item:hover {
             background: linear-gradient(145deg, #1d1533 0%, #0f0b1c 100%);
             border-color: rgba(139, 92, 246, 0.4);
@@ -397,12 +420,14 @@
             z-index: 5;
         }
         
+        /* 🔥 প্লে হওয়া একটিভ চ্যানেলে চমৎকার গ্লোয়িং নিয়ন সায়ান লাইটিং 🔥 */
         .channel-item.active {
             background: linear-gradient(145deg, rgba(139, 92, 246, 0.25) 0%, #05030a 100%) !important;
             border: 1.5px solid #00ffaa !important; 
             box-shadow: 0 0 22px rgba(0, 255, 170, 0.75), inset 0 0 8px rgba(0, 255, 170, 0.35) !important;
         }
 
+        /* হাই কোয়ালিটি লোগো প্লেসমেন্ট */
         .channel-logo {
             width: 100%;
             height: 48px;
@@ -415,6 +440,7 @@
             will-change: transform;
         }
 
+        /* ফেভারিট হার্ট আইকন */
         .fav-heart {
             position: absolute;
             top: 8px;
@@ -434,6 +460,7 @@
             text-shadow: 0 0 8px rgba(255, 56, 96, 0.6);
         }
 
+        /* ক্লিয়ার ও প্রফেশনাল টেক্সট বার */
         .channel-name {
             position: absolute;
             bottom: 0;
@@ -455,6 +482,7 @@
         .channel-item:hover .channel-name { color: #ffffff; }
         .channel-item.active .channel-name { color: #00ffaa; }
 
+        /* মডার্ন লাইভ ইন্ডিকেটর ডট */
         .live-dot {
             position: absolute;
             top: 10px;
@@ -474,6 +502,7 @@
             100% { transform: scale(0.9); opacity: 0.6; }
         }
 
+        /* কঙ্কাল/লোড স্কিন */
         .skeleton-card {
             height: 110px;
             background: rgba(19, 14, 33, 0.4);
@@ -494,11 +523,13 @@
             100% { transform: translateX(100%); }
         }
 
+        /* --- SCROLLBAR --- */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #080a10; }
         ::-webkit-scrollbar-thumb { background: #3b2a54; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
 
+        /* --- RESPONSIVE FOR MOBILE PORTRAIT --- */
         @media (max-width: 900px) and (orientation: portrait) {
             body { overflow: auto; padding-top: 83px; }
             .main-container { flex-direction: column; height: auto; }
@@ -509,6 +540,7 @@
             .channel-logo { height: 40px; }
         }
 
+        /* --- RESPONSIVE FOR MOBILE LANDSCAPE --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body { overflow: hidden; height: 100vh; width: 100vw; padding-top: 28px; }
             header, .stream-info, .playlist-section { display: none !important; }
@@ -558,6 +590,7 @@
                     <h3 id="currentChannelName"><i class="fa-solid fa-satellite-dish" style="color:#4634ff;"></i> No Channel Selected</h3>
                 </div>
                 <div class="player-controls-right">
+                    <button class="pip-btn" id="pipButton" title="Picture in Picture"><i class="fa-solid fa-window-restore"></i> PiP</button>
                     <div class="status-badge" id="playerStatus">Ready</div>
                 </div>
             </div>
@@ -592,6 +625,7 @@
         const currentChannelName = document.getElementById("currentChannelName");
         const playerStatus = document.getElementById("playerStatus");
         const totalChannelsBadge = document.getElementById("totalChannels");
+        const pipButton = document.getElementById("pipButton");
         
         const videoWrapper = document.getElementById("videoWrapper");
         const prevChannelBtn = document.getElementById("prevChannelBtn");
@@ -630,6 +664,20 @@
         videoWrapper.addEventListener("mousemove", showNavigationButtons);
         videoWrapper.addEventListener("click", showNavigationButtons);
         videoWrapper.addEventListener("touchstart", showNavigationButtons, {passive: true});
+
+        if (document.pictureInPictureEnabled) {
+            pipButton.addEventListener("click", async () => {
+                try {
+                    if (document.pictureInPictureElement) {
+                        await document.exitPictureInPicture();
+                    } else {
+                        await video.requestPictureInPicture();
+                    }
+                } catch (error) {}
+            });
+        } else {
+            pipButton.style.display = "none";
+        }
 
         function renderSkeletons() {
             channelContainer.innerHTML = "";
