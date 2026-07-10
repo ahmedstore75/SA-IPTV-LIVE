@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SA IPTV LIVE - Global OTT Player</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -339,7 +339,7 @@
             .channel-logo { height: 40px; }
         }
 
-        /* --- 🔥 নমনীয় ল্যান্ডস্কেপ মোড (ভিডিওর আসল রেশিও এবং বাটন দুটোই ঠিক থাকবে) 🔥 --- */
+        /* --- 🔥 আলটিমেট ল্যান্ডস্কেপ মোড (ফুল স্ট্রেচ ও স্ক্রিন ফিট) 🔥 --- */
         @media (max-width: 950px) and (orientation: landscape) {
             body { overflow: hidden !important; height: 100vh !important; width: 100vw !important; padding-top: 0 !important; margin: 0 !important; }
             header, .stream-info, .playlist-section, .notice-bar { display: none !important; }
@@ -347,19 +347,30 @@
             .main-container { height: 100vh !important; width: 100vw !important; margin: 0 !important; padding: 0 !important; }
             .player-section { flex: 1 !important; height: 100vh !important; width: 100vw !important; padding: 0 !important; margin: 0 !important; }
             
-            /* আপনার আগের কোডের মতো ফুল স্ক্রিন ফিটনেস ফিরিয়ে আনা হলো */
+            /* র‍্যাপারকে ফোর্স ফুলস্ক্রিন সাইজ করা হলো */
             .video-wrapper { 
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
                 height: 100vh !important; 
                 width: 100vw !important; 
                 border-radius: 0 !important; 
                 border: none !important; 
+                margin: 0 !important;
+                padding: 0 !important;
                 background: #000;
             }
             
+            /* ⚡ সিএসএস ও ব্রাউজার ইঞ্জিনের কম্বিনেশনে ভিডিওর বর্ডার জিরো করে স্ট্রেচ ফিট ⚡ */
             video { 
-                width: 100% !important; 
-                height: 100% !important; 
-                object-fit: contain !important; /* জেনুইন নো-কালো-বর্ডার ও নো-ক্রপ রেশিও */
+                width: 100vw !important; 
+                height: 100vh !important; 
+                object-fit: fill !important; /* কোনো ক্রপ ছাড়া চার কোণায় স্ট্রেচ করে ফিট */
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
             }
             
             .nav-overlay-btn { width: 60px; height: 60px; font-size: 22px; background: rgba(15, 18, 29, 0.9); border: 1px solid rgba(255, 255, 255, 0.3); }
@@ -367,11 +378,16 @@
             .nav-next { right: 35px; }
         }
 
-        /* যখন ব্রাউজার নিজেই ফুলস্ক্রিন এলিমেন্ট হ্যান্ডেল করবে তখন যাতে বাটন ও ভিডিও দুটোই সমানভাবে দেখা যায় */
+        /* ব্রাউজার নেটিভ ফুলস্ক্রিন অ্যাক্টিভ হলেও যাতে রেশিও ফিল মোডে থাকে */
         #videoWrapper:fullscreen video {
             width: 100vw !important;
             height: 100vh !important;
-            object-fit: contain !important;
+            object-fit: fill !important;
+        }
+        #videoWrapper:-webkit-full-screen video {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: fill !important;
         }
     </style>
 </head>
@@ -511,7 +527,7 @@
             muteBtn.innerHTML = video.volume == 0 ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
         });
 
-        // 🔥 নতুন ফুলস্ক্রিন API লজিক (যা বাটন এবং ভিডিওর রেশিও দুটোকেই নিখুঁত রাখবে)
+        // ফুলস্ক্রিন এপিআই টগল লজিক (রেশিও ফিক্সড)
         fullscreenBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             if (!document.fullscreenElement) {
@@ -529,11 +545,21 @@
             }
         });
 
-        // ফুলস্ক্রিন থেকে বের হলে আইকন পরিবর্তন ট্র্যাক করা
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
                 fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i>';
             }
+        });
+
+        // স্ক্রিন ওরিয়েন্টেশন চেঞ্জ ডিটেকশন ট্রিক (আলটিমেট সমাধান)
+        window.addEventListener("orientationchange", function() {
+            setTimeout(() => {
+                if (window.orientation === 90 || window.orientation === -90) {
+                    video.style.setProperty("object-fit", "fill", "important");
+                } else {
+                    video.style.setProperty("object-fit", "contain", "important");
+                }
+            }, 200);
         });
 
         document.addEventListener("keydown", (e) => {
